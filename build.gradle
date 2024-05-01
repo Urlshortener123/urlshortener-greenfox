@@ -27,6 +27,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.2.4'
+	implementation 'org.flywaydb:flyway-maven-plugin:10.8.1'
 }
 
 tasks.named('test') {
