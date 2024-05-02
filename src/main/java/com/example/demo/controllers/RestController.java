@@ -2,13 +2,13 @@ package com.example.demo.controllers;
 
 import com.example.demo.DTO.MessageDTO;
 import com.example.demo.models.ShortenedUrl;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.UUID;
 
-@org.springframework.web.bind.annotation.RestController
+@Controller
 public class RestController {
     @PostMapping("/shortUrl")
     public String shorteningUrl(@PathVariable String Url) {
