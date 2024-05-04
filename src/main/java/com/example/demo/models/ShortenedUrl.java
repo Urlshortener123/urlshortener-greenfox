@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 @Entity
 public class ShortenedUrl {
 
- @Value("${url}")
  private String url;
  private String shortenedUrl;
  @Id
