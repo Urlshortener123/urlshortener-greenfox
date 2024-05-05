@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.UUID;
 
 @Controller
-public class RestController {
+public class UrlController {
     @PostMapping("/shortUrl")
     public String shorteningUrl(@PathVariable String Url) {
         if (Url == null) {
