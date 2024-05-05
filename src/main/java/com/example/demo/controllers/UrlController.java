@@ -20,20 +20,20 @@ public class UrlController {
     private final LinkRepository linkRepository;
 
     @PostMapping("/shortUrl")
-    public String shorteningUrl(@RequestParam String Url,
+    public String shorteningUrl(@RequestParam String url,
                                 RedirectAttributes redirectAttributes) {
-        if (Url == null) {
+        if (url == null) {
             MessageDTO messageDTO = new MessageDTO();
             messageDTO.setMessage("No URL provided");
             return "No url provided";
         }
-        if (Url.isEmpty()) {
+        if (url.isEmpty()) {
             MessageDTO messageDTO = new MessageDTO();
             messageDTO.setMessage("No URL provided");
             return "No url provided";
         }
         ShortenedUrl shortenedUrl = new ShortenedUrl();
-        shortenedUrl.setUrl(Url);
+        shortenedUrl.setUrl(url);
         UUID uuid = UUID.randomUUID();
         String textUuid = uuid.toString();
         shortenedUrl.setShortenedUrl(textUuid);
