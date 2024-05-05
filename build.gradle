@@ -16,6 +16,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    flywayMigration
 }
 
 repositories {
@@ -35,6 +36,9 @@ dependencies {
     compileOnly('javax.persistence:javax.persistence-api:2.2')
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.flywaydb:flyway-core:10.12.0'
+    implementation 'org.flywaydb:flyway-mysql:10.12.0'
+    flywayMigration 'com.mygroupid:my-lib:1.2.3'
 
 }
 
