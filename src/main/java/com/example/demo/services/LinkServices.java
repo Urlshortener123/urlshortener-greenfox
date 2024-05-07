@@ -13,6 +13,6 @@ public class LinkServices {
     private final LinkRepository linkRepository;
 
     public ShortenedUrl findByUuid(String uuid){
-        return linkRepository.findByShortenedUrl(uuid);
+        return linkRepository.findByUuid(uuid);
     }
 }

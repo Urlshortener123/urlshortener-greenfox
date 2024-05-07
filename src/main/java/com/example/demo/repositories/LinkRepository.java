@@ -11,6 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface LinkRepository extends JpaRepository<ShortenedUrl, Long> {
-    @Query("SELECT s FROM ShortenedUrl s WHERE s.shortenedUrl = :shortUrl")
-    ShortenedUrl findByShortenedUrl(@Param("shortUrl") String shortUrl);
+
+    ShortenedUrl findByUuid(String uuid);
 }

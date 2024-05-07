@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 public class ShortenedUrl {
 
  private String url;
- private String shortenedUrl;
+ private String uuid;
  @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  private Long id;
