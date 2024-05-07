@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS roles (
 CREATE TABLE IF NOT EXISTS users_roles (
     role_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    PRIMARY KEY (role_id, user_id),
-    FOREIGN KEY (role_id) REFERENCES roles(id)
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (role_id) REFERENCES roles(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

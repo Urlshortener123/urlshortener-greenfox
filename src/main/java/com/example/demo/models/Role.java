@@ -19,9 +19,10 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    @Column(name = "role_name")
+    private String roleName;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<User> userList;
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
 }
