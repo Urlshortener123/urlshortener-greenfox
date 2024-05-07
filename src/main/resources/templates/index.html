@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,10 +8,12 @@
 <h1>Shorten url</h1>
 <form action="/shortUrl" method="post">
     <label for="Url">Insert URL</label>
-    <input type="text" id="Url" name="Url">
-
+    <input type="text" id="url" name="url">
 
     <button type="submit">Add</button>
 </form>
+<h2
+        th:text="${longUrl}"
+></h2>
 </body>
 </html>

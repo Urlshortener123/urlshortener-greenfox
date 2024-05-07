@@ -13,14 +13,13 @@ java {
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	flywayMigration
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
@@ -31,10 +30,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.2.4'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.flywaydb:flyway-core:10.12.0'
-	implementation 'org.flywaydb:flyway-mysql:10.12.0'
-	flywayMigration 'com.mygroupid:my-lib:1.2.3'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.flywaydb:flyway-core:10.12.0'
+    implementation 'org.flywaydb:flyway-mysql:10.12.0'
+
 }
 
 tasks.named('test') {
