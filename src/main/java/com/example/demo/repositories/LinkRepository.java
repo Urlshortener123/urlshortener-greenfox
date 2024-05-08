@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface LinkRepository extends JpaRepository<ShortenedUrl, Long> {
 
     ShortenedUrl findByUuid(String uuid);
+
 }
