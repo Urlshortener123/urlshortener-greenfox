@@ -1,15 +1,15 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.2.5'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id "org.flywaydb.flyway" version "10.12.0"
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id "org.flywaydb.flyway" version "10.12.0"
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+	sourceCompatibility = '17'
 }
 
 configurations {
@@ -24,19 +24,18 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.flywaydb:flyway-core:10.12.0'
     implementation 'org.flywaydb:flyway-mysql:10.12.0'
-
 }
 
-
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }

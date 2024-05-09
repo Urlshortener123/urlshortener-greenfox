@@ -8,8 +8,8 @@
 <h1>Shorten url</h1>
 <form action="/shortUrl" method="post">
     <label for="Url">Insert URL</label>
-    <input type="text" id="url" name="url">
-
+    <input type="text" id="Url" name="url">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <button type="submit">Add</button>
 </form>
 <h2
