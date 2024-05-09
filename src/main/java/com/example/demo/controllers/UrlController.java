@@ -3,21 +3,24 @@ package com.example.demo.controllers;
 import com.example.demo.DTO.MessageDTO;
 import com.example.demo.models.ShortenedUrl;
 import com.example.demo.repositories.LinkRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
 public class UrlController {
+
     private final LinkRepository linkRepository;
+
+    @Value("${domain.name}")
+    private String name = "placeholder name";
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@RequestParam String url,
@@ -36,18 +39,18 @@ public class UrlController {
         shortenedUrl.setUrl(url);
         UUID uuid = UUID.randomUUID();
         String textUuid = uuid.toString();
-        shortenedUrl.setShortenedUrl(textUuid);
+        shortenedUrl.setUuid(textUuid);
         linkRepository.save(shortenedUrl);
-        redirectAttributes.addFlashAttribute("longUrl", ("${domain.name}") + "/r/" + textUuid);
-        return "redirect/index";
+        redirectAttributes.addFlashAttribute("longUrl", (name) + "/r/" + textUuid);
+        return "redirect:/index";
     }
 
+    @ResponseStatus(HttpStatus.FOUND)
     @GetMapping("/r/{uuid}")
-    public RedirectView redirectToUrl(@PathVariable String uuid) {
-        ShortenedUrl  shortenedUrl = linkRepository.findByShortenedUrl(uuid);
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(shortenedUrl.getUrl());
-        return redirectView;
+    public void redirectToUrl(@PathVariable(name = "uuid") String hash,
+                              HttpServletResponse response) {
+        ShortenedUrl shortenedUrl = linkRepository.findByUuid(hash);
+        response.addHeader("location", shortenedUrl.getUrl());
     }
 
 }

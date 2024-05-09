@@ -1,13 +1,12 @@
 package com.example.demo.repositories;
 
-import com.example.demo.models.ShortenedUrl;
+import com.example.demo.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface LinkRepository extends JpaRepository<ShortenedUrl, Long> {
+public interface UserRepository extends JpaRepository <User, Long> {
 
-    ShortenedUrl findByUuid(String uuid);
+    User findByUsername(String username);
 
 }
