@@ -2,7 +2,9 @@ package com.example.demo.controllers;
 
 import com.example.demo.DTO.MessageDTO;
 import com.example.demo.models.ShortenedUrl;
+import com.example.demo.models.User;
 import com.example.demo.repositories.LinkRepository;
+import com.example.demo.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Controller
@@ -18,12 +21,14 @@ import java.util.UUID;
 public class UrlController {
 
     private final LinkRepository linkRepository;
+    private final UserService userService;
 
     @Value("${domain.name}")
     private String name = "placeholder name";
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@RequestParam String url,
+                                @RequestParam String username,
                                 RedirectAttributes redirectAttributes) {
         if (url == null) {
             MessageDTO messageDTO = new MessageDTO();
@@ -40,6 +45,11 @@ public class UrlController {
         UUID uuid = UUID.randomUUID();
         String textUuid = uuid.toString();
         shortenedUrl.setUuid(textUuid);
+        shortenedUrl.setCreationDate(LocalDate.now());
+        if (!username.isEmpty()) {
+            User actUser = userService.selectUser(username);
+            shortenedUrl.setUser(actUser);
+        }
         linkRepository.save(shortenedUrl);
         redirectAttributes.addFlashAttribute("longUrl", (name) + "/r/" + textUuid);
         return "redirect:/index";

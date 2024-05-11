@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class ShortenedUrl {
  private String url;
  private String uuid;
  @Column(name = "creation_date")
+ @Temporal(TemporalType.DATE)
  private LocalDate creationDate;
 
  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
