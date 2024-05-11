@@ -30,4 +30,7 @@ public class User {
     )
     private List<Role> roles;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<ShortenedUrl> urlList;
+
 }
