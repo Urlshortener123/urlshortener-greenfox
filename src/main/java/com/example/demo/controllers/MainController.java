@@ -17,7 +17,6 @@ public class MainController {
 
     @GetMapping({"/", "/index"})
     public String mainPage(Principal principal, HttpSession session) {
-        // Getting User from '/login'
         if (principal != null) {
             User actUser = userService.selectUser(principal.getName());
             session.setAttribute("username", actUser.getUsername());

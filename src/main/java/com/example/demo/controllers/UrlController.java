@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ public class UrlController {
     private final UserService userService;
 
     @Value("${domain.name}")
-    private String name = "placeholder name";
+    private String domainName;
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@RequestParam String url,
@@ -51,7 +53,7 @@ public class UrlController {
             shortenedUrl.setUser(actUser);
         }
         linkRepository.save(shortenedUrl);
-        redirectAttributes.addFlashAttribute("longUrl", (name) + "/r/" + textUuid);
+        redirectAttributes.addFlashAttribute("longUrl", (domainName) + "/r/" + textUuid);
         return "redirect:/index";
     }
 
@@ -61,6 +63,14 @@ public class UrlController {
                               HttpServletResponse response) {
         ShortenedUrl shortenedUrl = linkRepository.findByUuid(hash);
         response.addHeader("location", shortenedUrl.getUrl());
+    }
+
+    @GetMapping("/history")
+    public String historyPage(Model model, Principal principal) {
+        User actUser = userService.selectUser(principal.getName());
+        model.addAttribute("urls", linkRepository.findAllByUserIdOrderByCreationDateDesc(actUser.getId()));
+        model.addAttribute("domain", domainName);
+        return "history";
     }
 
 }

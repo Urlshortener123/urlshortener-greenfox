@@ -47,6 +47,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/secured").authenticated()
+                        .requestMatchers("/history").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(Customizer.withDefaults());
         return httpSecurity.build();
