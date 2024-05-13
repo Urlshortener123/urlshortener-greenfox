@@ -1,4 +1,7 @@
 package com.example.demo.config;
+import com.example.demo.repositories.RoleRepository;
+import com.example.demo.repositories.UserRepository;
+import com.example.demo.services.TestDataInitializer;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +34,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public TestDataInitializer testDataInitializer(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+      return new TestDataInitializer(userRepository, roleRepository, passwordEncoder);
     }
 
     @Bean
