@@ -1,9 +1,11 @@
 package com.example.demo.config;
+
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.TestDataInitializer;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -37,17 +39,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public TestDataInitializer testDataInitializer(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-      return new TestDataInitializer(userRepository, roleRepository, passwordEncoder);
-    }
-
-    @Bean
     public UserDetailsService userDetailsService() {
         return username -> {
             com.example.demo.models.User user = userService.selectUser(username);
             List<SimpleGrantedAuthority> grantedAuthorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.toString())).collect(Collectors.toList());
             return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
         };
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "localdev")
+    public TestDataInitializer testDataInitializer(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        return new TestDataInitializer(userRepository, roleRepository, passwordEncoder);
     }
 
     @Bean
@@ -61,7 +64,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
