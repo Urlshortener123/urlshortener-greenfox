@@ -26,7 +26,7 @@ public class ShortenedUrl {
  @Temporal(TemporalType.DATE)
  private LocalDate creationDate;
 
- @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+ @ManyToOne
  @JoinColumn(name= "user_id")
  private User user;
 
