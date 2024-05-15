@@ -6,13 +6,13 @@ import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Slf4j
 @RequiredArgsConstructor
 public class TestDataInitializer {
 
@@ -22,12 +22,14 @@ public class TestDataInitializer {
 
     @PostConstruct
     public void initializeTestUser() {
+        log.info("TestDataInitializer is running...");
         if (userRepository.findByUsername("testuser") == null) {
             User test = new User();
             test.setUsername("testuser");
             test.setPassword(passwordEncoder.encode("password"));
             test.setRoles(initializeTestRole("ROLE_USER"));
             userRepository.save(test);
+            log.info("Created testuser...");
         }
     }
 
