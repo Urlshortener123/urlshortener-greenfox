@@ -26,6 +26,9 @@
 
             <button id="submit_btn">Short it</button>
         </div>
+
+        <p class="errorMessage" th:text="${missingUrlError} != null ? ${missingUrlError}"></p>
+        <p class="errorMessage" th:text="${maliciousError} != null ? ${maliciousError}"></p>
     </form>
 
     <div class="link_container">
