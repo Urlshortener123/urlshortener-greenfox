@@ -35,13 +35,15 @@ public class TestDataInitializer {
 
     public List<Role> initializeTestRole(String roleName) {
         List<Role> testRoleList = new ArrayList<>();
-        if (roleRepository.findByRoleName(roleName) == null) {
+        Role role = roleRepository.findByRoleName(roleName);
+        if (role == null) {
             // Add new Role if it doesn't exist
             Role testRole = new Role();
             testRole.setRoleName(roleName);
             roleRepository.save(testRole);
-            // Return a List<Role> with 1 Role (from parameter)
             testRoleList.add(testRole);
+        } else {
+            testRoleList.add(role);
         }
         return testRoleList;
     }
