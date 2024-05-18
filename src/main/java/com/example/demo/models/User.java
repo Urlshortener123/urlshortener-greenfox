@@ -31,4 +31,7 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<ShortenedUrl> urlList;
+
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL_shortener - My history</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+
+<body>
+<div class="container">
+
+    <div th:insert="~{header_fragment}"></div>
+
+    <div class="text_container">
+        <h1>My shortened links</h1>
+
+        <table class="history_table">
+            <thead>
+            <tr>
+                <td>Original Url</td>
+                <td>Shortened Url</td>
+                <td>Creation Date</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="url : ${urls}" th:object="${url}">
+                <td th:text="*{url}"></td>
+                <td th:text="${domain} + '/r/' + *{uuid}"></td>
+                <td th:text="*{creationDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+</body>
+
+</html>

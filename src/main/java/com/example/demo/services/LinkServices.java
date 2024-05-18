@@ -14,4 +14,5 @@ public class LinkServices {
     public ShortenedUrl findByUuid(String uuid){
         return linkRepository.findByUuid(uuid);
     }
+
 }
