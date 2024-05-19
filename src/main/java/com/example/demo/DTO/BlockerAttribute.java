@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.util.Map;
+
 @Data
 @RequiredArgsConstructor
 @ToString
-public class BlockerResponse {
+public class BlockerAttribute {
 
-    @SerializedName("data")
-    private BlockerData domainData;
+    @SerializedName("last_analysis_stats")
+    private Map<String, Integer> domainStat;
 
 }

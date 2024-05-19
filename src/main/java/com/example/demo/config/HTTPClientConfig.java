@@ -14,7 +14,7 @@ public class HTTPClientConfig {
     public BlockerResponseService blockerDTOService() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.virustotal.com/api/v3/")
+                .baseUrl("https://www.virustotal.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build();

@@ -25,18 +25,22 @@ public class BlockerService {
     public boolean IsMalicious(String url) {
         boolean isMalicious = false;
         try {
-            Call<BlockerResponse> callSync = blockerResponseService.fetchMaliciousScore(url, apiKey);
+            Call<BlockerResponse> callSync = blockerResponseService.fetchDomain(url, apiKey);
             Response<BlockerResponse> response = callSync.execute();
             BlockerResponse blockerResponse = response.body();
             if (blockerResponse == null) {
                 log.error("Error getting the API response...");
-            } else if (blockerResponse.getMaliciousScore() > 3) {
+            } else if (getMaliciousScore(blockerResponse) > 3) {
                 isMalicious = true;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return isMalicious;
+    }
+
+    public int getMaliciousScore(BlockerResponse blockerResponse) {
+        return blockerResponse.getDomainData().getDomainAttribute().getDomainStat().get("malicious");
     }
 
 }
