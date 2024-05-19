@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @RequiredArgsConstructor
 @ToString
-public class BlockerDTO {
+public class BlockerResponse {
 
     @SerializedName("data.id")
     private String domainName;
