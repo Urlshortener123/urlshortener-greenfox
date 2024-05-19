@@ -1,8 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.Role;
+import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.models.User;
-import com.example.demo.repositories.RoleRepository;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class RegistrationController {
     private final UserService userService;
-    private final RoleRepository roleRepository;
 
     @GetMapping("/register")
     public String registerForm(Model model) {
@@ -35,18 +33,16 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public String registerSubmit(User user, RedirectAttributes redirectAttributes) {
+    public String registerSubmit(CreateUserRequest createUserRequest, RedirectAttributes redirectAttributes) {
 
         //Does the user already exist?
-        if (userService.selectUser(user.getUsername()) != null) {
+        if (userService.selectUser(createUserRequest.getUsername()) != null) {
             redirectAttributes.addFlashAttribute("errorMessage", "User already exists");
             return "redirect:/register";
         }
 
         //ROLE_USER role
-        Role roleUser = roleRepository.findByRoleName("ROLE_USER");
-        user.getRoles().add(roleUser);
-        userService.addUser(user.getUsername(), user.getPassword());
+        userService.addUser(createUserRequest);
 
         //user should be redirected to the /login page
         redirectAttributes.addFlashAttribute("successMessage", "Registration is successful");
