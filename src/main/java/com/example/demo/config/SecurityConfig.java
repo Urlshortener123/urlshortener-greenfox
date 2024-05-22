@@ -1,9 +1,14 @@
 package com.example.demo.config;
+
+import com.example.demo.repositories.RoleRepository;
+import com.example.demo.repositories.UserRepository;
+import com.example.demo.services.TestDataInitializer;
 import com.example.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -43,17 +48,24 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Profile("localdev")
+    public TestDataInitializer testDataInitializer(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        return new TestDataInitializer(userRepository, roleRepository, passwordEncoder);
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/secured").authenticated()
+                        .requestMatchers("/history").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(Customizer.withDefaults());
         return httpSecurity.build();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService());
         provider.setPasswordEncoder(passwordEncoder());
