@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LinkServices {
+public class LinkService {
 
     private final LinkRepository linkRepository;
 
