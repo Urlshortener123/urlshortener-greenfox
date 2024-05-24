@@ -1,6 +1,8 @@
 package com.example.demo;
 
+import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.models.User;
+import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private PasswordEncoder passwordEncoder;
+    @Mock
+    private RoleRepository roleRepository;
     @InjectMocks
     private UserService underTest;
 
@@ -33,7 +37,10 @@ public class UserServiceTest {
         Mockito.when(passwordEncoder.encode(eq(password))).thenReturn(encodedPassword);
         ArgumentCaptor<User> userArgument = ArgumentCaptor.forClass(User.class);
 
-        underTest.addUser(username, password);
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setUsername(username);
+        createUserRequest.setPassword(password);
+        underTest.addUser(createUserRequest);
 
         Mockito.verify(userRepository, Mockito.times(1)).save(userArgument.capture());
         User user = userArgument.getValue();

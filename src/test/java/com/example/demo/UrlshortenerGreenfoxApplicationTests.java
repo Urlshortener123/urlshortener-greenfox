@@ -34,7 +34,7 @@ class UrlshortenerGreenfoxApplicationTests {
 
     @BeforeEach
     public void setUp() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl("http://testingurl.com", "testuuid", 1L);
+        ShortenedUrl shortenedUrl = new ShortenedUrl(1L, "http://testingurl.com", "testuuid",null, null);
         linkRepository.save(shortenedUrl);
     }
 
