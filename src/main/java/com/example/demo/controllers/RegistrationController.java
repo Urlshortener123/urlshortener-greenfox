@@ -19,13 +19,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class RegistrationController {
     private final UserService userService;
 
+    private boolean isLoggedIn() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.isAuthenticated();
+    }
+
     @GetMapping("/register")
     public String registerForm(Model model) {
 
         //Is the user logged in?
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated()) {
-            log.error(auth.getName());
+        if (isLoggedIn()) {
             return "redirect:/index";
         }
         model.addAttribute("user", new User());
