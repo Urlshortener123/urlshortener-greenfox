@@ -42,7 +42,7 @@ public class UrlController {
         }
 
         // Check whether the url is malicious
-        if (blockerService.IsMalicious(url)) {
+        if (blockerService.isMalicious(url)) {
             redirectAttributes.addFlashAttribute("maliciousError","The given URL is considered malicious, shortening is not possible");
             return "redirect:/index";
         }
