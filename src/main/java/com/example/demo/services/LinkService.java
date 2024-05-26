@@ -4,7 +4,6 @@ import com.example.demo.models.ShortenedUrl;
 import com.example.demo.repositories.LinkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -24,5 +23,5 @@ public class LinkService {
     public List<ShortenedUrl> listAllUrlsForUser(Long userId) {
         return linkRepository.findAllByUserIdOrderByCreationDateDesc(userId);
     }
-
+  
 }
