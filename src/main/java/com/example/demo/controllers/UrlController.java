@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -25,8 +26,8 @@ public class UrlController {
     private final LinkRepository linkRepository;
     private final UserService userService;
 
-    @Value("${domain.name}")
-    private String domainName;
+    @Value("${base.url}")
+    private String baseUrl;
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@RequestParam String url,
@@ -53,23 +54,31 @@ public class UrlController {
             shortenedUrl.setUser(actUser);
         }
         linkRepository.save(shortenedUrl);
-        redirectAttributes.addFlashAttribute("longUrl", (domainName) + "/r/" + textUuid);
+        redirectAttributes.addFlashAttribute("longUrl", String.format("%s/r/%s", baseUrl, textUuid));
         return "redirect:/index";
     }
 
     @ResponseStatus(HttpStatus.FOUND)
     @GetMapping("/r/{uuid}")
     public void redirectToUrl(@PathVariable(name = "uuid") String hash,
-                              HttpServletResponse response) {
+                              HttpServletResponse response) throws IOException {
         ShortenedUrl shortenedUrl = linkRepository.findByUuid(hash);
-        response.addHeader("location", shortenedUrl.getUrl());
+
+        if (shortenedUrl != null) {
+            shortenedUrl.setClickCount(shortenedUrl.getClickCount() + 1);
+            linkRepository.save(shortenedUrl);
+            response.addHeader("location", shortenedUrl.getUrl());
+            response.sendRedirect(shortenedUrl.getUrl());
+        } else {
+            response.sendError(HttpStatus.NOT_FOUND.value(), "URL not found");
+        }
     }
 
     @GetMapping("/history")
     public String historyPage(Model model, Principal principal) {
         User actUser = userService.selectUser(principal.getName());
         model.addAttribute("urls", linkRepository.findAllByUserIdOrderByCreationDateDesc(actUser.getId()));
-        model.addAttribute("domain", domainName);
+        model.addAttribute("domain", baseUrl);
         return "history";
     }
 

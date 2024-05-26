@@ -27,7 +27,10 @@ public class ShortenedUrl {
  private LocalDate creationDate;
 
  @ManyToOne
- @JoinColumn(name= "user_id")
+ @JoinColumn(name = "user_id")
  private User user;
+
+ @Column(name = "click_count", nullable = false)
+ private Integer clickCount = 0;
 
 }
