@@ -33,18 +33,19 @@ public class UrlController {
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@RequestParam String url,
-                                @RequestParam String username,
+                                Principal principal,
+                                Model model,
                                 RedirectAttributes redirectAttributes) {
         // Check if url is given as parameter
         if (url == null || url.isEmpty()) {
-            redirectAttributes.addFlashAttribute("missingUrlError", "No URL is provided!");
-            return "redirect:/index";
+            model.addAttribute("missingUrlError", "No URL is provided!");
+            return "index";
         }
 
         // Check whether the url is malicious
         if (blockerService.isMalicious(url)) {
-            redirectAttributes.addFlashAttribute("maliciousError","The given URL is considered malicious, shortening is not possible");
-            return "redirect:/index";
+            model.addAttribute("maliciousError","The given URL is considered malicious, shortening is not possible");
+            return "index";
         }
 
         // Perform the url shortening
@@ -54,8 +55,8 @@ public class UrlController {
         String textUuid = uuid.toString();
         shortenedUrl.setUuid(textUuid);
         shortenedUrl.setCreationDate(LocalDate.now());
-        if (!username.isEmpty()) {
-            User actUser = userService.selectUser(username);
+        if (principal != null) {
+            User actUser = userService.selectUser(principal.getName());
             shortenedUrl.setUser(actUser);
         }
         linkService.addLink(shortenedUrl);
