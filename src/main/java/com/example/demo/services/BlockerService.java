@@ -32,7 +32,7 @@ public class BlockerService {
                 isMalicious = true;
             }
         } catch (Exception e) {
-            log.error(errorMessage);
+            log.error(errorMessage, e);
         }
         return isMalicious;
     }
