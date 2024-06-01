@@ -22,7 +22,8 @@ public class BlockerService {
         boolean isMalicious = false;
         String errorMessage = "Error getting the API response...";
         try {
-            Call<BlockerResponse> callSync = blockerResponseService.fetchDomain(url, apiKey);
+            String cleanUrl =  url.replaceAll("http(s)?://|www\\.|/.*", "");
+            Call<BlockerResponse> callSync = blockerResponseService.fetchDomain(cleanUrl, apiKey);
             Response<BlockerResponse> response = callSync.execute();
             BlockerResponse blockerResponse = response.body();
             if (blockerResponse == null) {

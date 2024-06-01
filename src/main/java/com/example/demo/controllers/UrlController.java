@@ -69,7 +69,12 @@ public class UrlController {
     public void redirectToUrl(@PathVariable(name = "uuid") String hash,
                               HttpServletResponse response) {
         ShortenedUrl shortenedUrl = linkService.findByUuid(hash);
-        response.addHeader("location", shortenedUrl.getUrl());
+        String originalUrl = shortenedUrl.getUrl();
+        // Redirection works only if http:// prefix is used, needs to be added if missing from original URL
+        if(!originalUrl.contains("http")) {
+            originalUrl = "http://" + originalUrl;
+        }
+        response.addHeader("location", originalUrl);
     }
 
     @GetMapping("/history")

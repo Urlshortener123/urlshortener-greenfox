@@ -31,7 +31,7 @@
 - If the url is considered malicious (maliciousScore > 3) based on the API database, system throws an error to the User and do not proceed.
 - If the url is not malicious (maliciousScore <= 3) the shortening is performed right away.
 - In case of any errors (no records of the given url, API service is not available) the system logs an error and skips the malicious check and performs the shortening anyways.
-- Please enter the URL _without_ `https://` prefix, so like: `www.domain.com`, or `domain.com`.
+- You can enter the URL in any form, so with or without`https://` or `www.` prefix, but the application handles only the `domain.com` part to communicate with the VirusTotal API.
 
 **Counting URL opening**
 - Betti
