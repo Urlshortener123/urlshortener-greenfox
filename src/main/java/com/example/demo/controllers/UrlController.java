@@ -1,12 +1,13 @@
 package com.example.demo.controllers;
 
-import com.example.demo.DTO.MessageDTO;
 import com.example.demo.models.ShortenedUrl;
 import com.example.demo.models.User;
-import com.example.demo.repositories.LinkRepository;
+import com.example.demo.services.BlockerService;
+import com.example.demo.services.LinkService;
 import com.example.demo.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -19,40 +20,48 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class UrlController {
 
-    private final LinkRepository linkRepository;
+    private final LinkService linkService;
     private final UserService userService;
+    private final BlockerService blockerService;
+
+    private static final String HTTP_PREFIX = "http://";
 
     @Value("${domain.name}")
     private String domainName;
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@RequestParam String url,
-                                @RequestParam String username,
+                                Principal principal,
+                                Model model,
                                 RedirectAttributes redirectAttributes) {
-        if (url == null) {
-            MessageDTO messageDTO = new MessageDTO();
-            messageDTO.setMessage("No URL provided");
-            return "No url provided";
+        // Check if url is given as parameter
+        if (url == null || url.isEmpty()) {
+            model.addAttribute("missingUrlError", "No URL is provided!");
+            return "index";
         }
-        if (url.isEmpty()) {
-            MessageDTO messageDTO = new MessageDTO();
-            messageDTO.setMessage("No URL provided");
-            return "No url provided";
+
+        // Check whether the url is malicious
+        if (blockerService.isMalicious(url)) {
+            model.addAttribute("maliciousError","The given URL is considered malicious, shortening is not possible");
+            return "index";
         }
+
+        // Perform the url shortening
         ShortenedUrl shortenedUrl = new ShortenedUrl();
         shortenedUrl.setUrl(url);
         UUID uuid = UUID.randomUUID();
         String textUuid = uuid.toString();
         shortenedUrl.setUuid(textUuid);
         shortenedUrl.setCreationDate(LocalDate.now());
-        if (!username.isEmpty()) {
-            User actUser = userService.selectUser(username);
+        if (principal != null) {
+            User actUser = userService.selectUser(principal.getName());
             shortenedUrl.setUser(actUser);
         }
-        linkRepository.save(shortenedUrl);
+        linkService.addLink(shortenedUrl);
         redirectAttributes.addFlashAttribute("longUrl", (domainName) + "/r/" + textUuid);
         return "redirect:/index";
     }
@@ -61,14 +70,19 @@ public class UrlController {
     @GetMapping("/r/{uuid}")
     public void redirectToUrl(@PathVariable(name = "uuid") String hash,
                               HttpServletResponse response) {
-        ShortenedUrl shortenedUrl = linkRepository.findByUuid(hash);
-        response.addHeader("location", shortenedUrl.getUrl());
+        ShortenedUrl shortenedUrl = linkService.findByUuid(hash);
+        String originalUrl = shortenedUrl.getUrl();
+        // Redirection works only if http:// prefix is used, needs to be added if missing from original URL
+        if(!originalUrl.startsWith(HTTP_PREFIX)) {
+            originalUrl = HTTP_PREFIX + originalUrl;
+        }
+        response.addHeader("location", originalUrl);
     }
 
     @GetMapping("/history")
     public String historyPage(Model model, Principal principal) {
         User actUser = userService.selectUser(principal.getName());
-        model.addAttribute("urls", linkRepository.findAllByUserIdOrderByCreationDateDesc(actUser.getId()));
+        model.addAttribute("urls", linkService.listAllUrlsForUser(actUser.getId()));
         model.addAttribute("domain", domainName);
         return "history";
     }
