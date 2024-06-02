@@ -9,3 +9,10 @@ ALTER TABLE urls
 
 ALTER TABLE users
     ADD email_verified BOOLEAN DEFAULT FALSE;
+
+CREATE TABLE IF NOT EXISTS pending_user_verifications
+(
+    hash    VARCHAR(50) NOT NULL,
+    user_id BIGINT      NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
