@@ -28,6 +28,8 @@ public class UrlController {
     private final UserService userService;
     private final BlockerService blockerService;
 
+    private static final String HTTP_PREFIX = "http://";
+
     @Value("${domain.name}")
     private String domainName;
 
@@ -71,8 +73,8 @@ public class UrlController {
         ShortenedUrl shortenedUrl = linkService.findByUuid(hash);
         String originalUrl = shortenedUrl.getUrl();
         // Redirection works only if http:// prefix is used, needs to be added if missing from original URL
-        if(!originalUrl.contains("http")) {
-            originalUrl = "http://" + originalUrl;
+        if(!originalUrl.startsWith(HTTP_PREFIX)) {
+            originalUrl = HTTP_PREFIX + originalUrl;
         }
         response.addHeader("location", originalUrl);
     }
