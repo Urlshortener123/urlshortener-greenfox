@@ -18,6 +18,8 @@ public class BlockerService {
     @Value("${VTDOC_APIKEY}")
     private String apiKey;
 
+    private static final Integer MALICIOUS_COUNT_THRESHOLD = 3;
+
     public boolean isMalicious(String url) {
         boolean isMalicious = false;
         String errorMessage = "Error getting the API response...";
@@ -25,11 +27,11 @@ public class BlockerService {
             String cleanUrl =  url.replaceAll("http(s)?://|www\\.|/.*", "");
             Call<BlockerResponse> callSync = blockerResponseService.fetchDomain(cleanUrl, apiKey);
             Response<BlockerResponse> response = callSync.execute();
-            BlockerResponse blockerResponse = response.body();
-            if (blockerResponse == null) {
-                log.error(errorMessage);
-            } else if (getMaliciousScore(blockerResponse) > 3) {
-                isMalicious = true;
+
+            if (response.isSuccessful()) {
+                isMalicious = getMaliciousScore(response.body()) > MALICIOUS_COUNT_THRESHOLD;
+            } else {
+                throw new RuntimeException(response.errorBody().string());
             }
         } catch (Exception e) {
             log.error(errorMessage, e);
