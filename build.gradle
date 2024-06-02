@@ -38,6 +38,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     testRuntimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.security:spring-security-test'
+    // https://mvnrepository.com/artifact/org.wiremock/wiremock-standalone
+    testImplementation 'org.wiremock:wiremock-standalone:3.6.0'
+
 }
 
 tasks.named('test') {
