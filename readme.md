@@ -1,8 +1,9 @@
 ### Initial setups needed
 
 **Docker setup:** 
-- 1st start up --> `docker run -p 3307:3306 --name mysqlcontainer -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=links -d mysql`
+- 1st start up (MySQL) --> `docker run -p 3307:3306 --name mysqlcontainer -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=links -d mysql`
 - Afterwards --> `docker start mysqlcontainer`
+- MailHog (for e-mail testing) --> `docker run -d -p 1025:1025 -p 8025:8025 --name mymailhog mailhog/mailhog`
 
 **VM arguments needed:** 
 - For DB password --> `-DMYSQL_password=password`
