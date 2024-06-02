@@ -71,7 +71,7 @@ public class UrlController {
         ShortenedUrl shortenedUrl = linkService.findByUuid(hash);
         String originalUrl = shortenedUrl.getUrl();
         // Redirection works only if http:// prefix is used, needs to be added if missing from original URL
-        if(!originalUrl.contains("http")) {
+        if(!originalUrl.startsWith("http")) {
             originalUrl = "http://" + originalUrl;
         }
         response.addHeader("location", originalUrl);
