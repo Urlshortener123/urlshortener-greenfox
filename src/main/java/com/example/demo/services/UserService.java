@@ -9,39 +9,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-
 
     public void addUser(CreateUserRequest createUserRequest) {
         User user = new User();
         user.setUsername(createUserRequest.getUsername());
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
 
-
-        //Role roleUser = roleRepository.findByRoleName("ROLE_USER");
-        //user.getRoles().add(roleUser);
-        //userRepository.save(user);
         Role userRole = roleRepository.findByRoleName("ROLE_USER");
         if (userRole == null) {
-            userRole = new Role();
-            userRole.setRoleName("ROLE_USER");
-            roleRepository.save(userRole);
+            throw new IllegalStateException("ROLE_USER role does not exist in the database.");
         }
 
-        user.setRoles(Collections.singletonList(userRole));
+        // Assign the existing role to the new user
+        user.getRoles().add(userRole);
         userRepository.save(user);
     }
 
     public User selectUser(String username) {
         return userRepository.findByUsername(username);
     }
-
 }

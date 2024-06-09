@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,17 +28,12 @@ public class RegistrationControllerTest {
     @Mock
     private Model model;
     @Mock
-    private RedirectAttributes redirectAttributes;
-    @Mock
     private Authentication authentication;
     @Mock
     private SecurityContext securityContext;
-
     @InjectMocks
     private RegistrationController registrationController;
-
     private MockMvc mockMvc;
-
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
@@ -71,13 +65,16 @@ public class RegistrationControllerTest {
         createUserRequest.setUsername("existinguser"); //Creates a CreateUserRequest with a username
 
         when(userService.selectUser(createUserRequest.getUsername())).thenReturn(new User()); //Mock selectUser to return a User object, in a way that the user already exist
-        String view = registrationController.registerSubmit(createUserRequest, redirectAttributes); //Calls the registerSubmit method
+        String view = registrationController.registerSubmit(createUserRequest, model); //Calls the registerSubmit method
 
         verify(userService, times(1)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
         verify(userService, times(0)).addUser(any(CreateUserRequest.class)); //do not call the addUser!
-        verify(redirectAttributes, times(1)).addFlashAttribute("errorMessage", "User already exists"); //call the error message
-        assertEquals("redirect:/register", view); //Check that the view returned is /register
+        //assertEquals("User already exists", model.getAttribute("errorMessage"));
+
+        assertEquals("register", view); //Check that the view returned is /register
+        verify(model, times(1)).addAttribute(eq("errorMessage"), eq("User already exists"));
     }
+
 
     @Test
     public void testRegisterSubmit_SuccessfulRegistration() throws Exception {
@@ -86,12 +83,13 @@ public class RegistrationControllerTest {
         createUserRequest.setPassword("password"); //Creates a CreateUserRequest with a username and a password
 
         when(userService.selectUser(createUserRequest.getUsername())).thenReturn(null); //Mock selectUser to return null, so in a way that the user does not exist
-        String view = registrationController.registerSubmit(createUserRequest, redirectAttributes); //Calls the registerSubmit method
+        String view = registrationController.registerSubmit(createUserRequest, model); //Calls the registerSubmit method
 
         verify(userService, times(1)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
         verify(userService, times(1)).addUser(createUserRequest); //call the addUser one time
-        verify(redirectAttributes, times(1)).addFlashAttribute("successMessage", "Registration is successful"); //call the success message
+
         assertEquals("redirect:/index", view); //Check that the view returned is /index
+        verify(model, times(1)).addAttribute(eq("successMessage"), eq("Registration is successful"));
     }
 
 }
