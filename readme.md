@@ -7,7 +7,7 @@
 **VM arguments needed:** 
 - For DB password --> `-DMYSQL_password=password`
 - For 'testuser' creation --> `-Dspring.profiles.active=localdev`
-- For API access --> `-DVTDOC_APIKEY=<YOUR_API_KEY>`
+- For API access --> `-DVTDOC_APIKEY=c42436737546829c8cd7d37f71685d88788bade697f392d9eb13b4df4d46d7be`
 
 **User handling:**
 - If VM arguments are correctly set, a new user (with "testuser" & "password" credentials, and "ROLE_USER" role ) will be automatically created.
@@ -20,7 +20,10 @@
 - Sanyi
 
 **User registration:**
-- Betti
+- Accessible via /register.
+- Only accessible to non-logged-in users. Logged-in users are redirected to the main page.
+- If the username already exists, an error message is displayed.
+- Successful registration shows a confirmation message and redirects to the login page.
 
 **URL history logging:**
 - On `/history` endpoint a logged in User can access his/her previously shortened links with details (original url, shortened url, creation date).
