@@ -44,7 +44,9 @@ public class SecurityConfig {
         return username -> {
             com.example.demo.models.User user = userService.selectUser(username);
             List<SimpleGrantedAuthority> grantedAuthorities = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.toString())).collect(Collectors.toList());
-            return new User(user.getUsername(), user.getPassword(), grantedAuthorities);
+            //Check if email is already verified -> disabled = false
+            boolean enabledUser = user.getEmailVerified();
+            return User.withUsername(user.getUsername()).password(user.getPassword()).authorities(grantedAuthorities).disabled(!enabledUser).build();
         };
     }
 

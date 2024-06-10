@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class RegistrationController {
+
     private final UserService userService;
 
     private boolean isLoggedIn() {
@@ -38,11 +39,14 @@ public class RegistrationController {
             model.addAttribute("errorMessage", "User already exists");
             return "register";
         }
-        //ROLE_USER role
-        userService.addUser(createUserRequest);
 
-        //user should be redirected to the /login page
+        //Check if email was already used
+
+
+        //After successful registration user should be redirected to the /login page
+        userService.addUser(createUserRequest);
         model.addAttribute("successMessage", "Registration is successful");
         return "index";
     }
+
 }

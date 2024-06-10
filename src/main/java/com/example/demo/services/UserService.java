@@ -19,6 +19,7 @@ public class UserService {
     public void addUser(CreateUserRequest createUserRequest) {
         User user = new User();
         user.setUsername(createUserRequest.getUsername());
+        user.setEmailVerified(false);
         user.setPassword(passwordEncoder.encode(createUserRequest.getPassword()));
 
         Role userRole = roleRepository.findByRoleName("ROLE_USER");
