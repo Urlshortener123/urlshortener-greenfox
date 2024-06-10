@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL_shortener - Register</title>
+    <link rel="stylesheet" type="text/css" href="/register.css">
+</head>
+<body>
+<div class="container">
+    <div th:replace="header_fragment"></div>
+
+    <div class="text_container">
+        <h1>New User Registration</h1>
+    </div>
+
+    <form class="register_container" th:action="@{/register}" method="post">
+
+        <p class="message" id="errorMessage" th:text="${errorMessage}"></p>
+        <p class="message" id="successMessage" th:text="${successMessage}"></p>
+
+        <div class="input_container">
+            <input type="text" id="username" name="username" placeholder="Enter your username">
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <button id="submit_btn" type="submit">Register</button>
+        </div>
+    </form>
+
+</div>
+
+<script th:inline="javascript">
+
+    var errorMessageElement = document.getElementById("errorMessage");
+    var successMessageElement = document.getElementById("successMessage");
+
+
+    errorMessageElement.style.color = "#f06464";
+    successMessageElement.style.color = "#54dc4a";
+
+    setTimeout(function() {
+        document.getElementById("errorMessage").style.display = "none";
+    }, 3000);
+
+    setTimeout(function() {
+        document.getElementById("successMessage").style.display = "none";
+    }, 3000);
+
+</script>
+
+</body>
+</html>
+

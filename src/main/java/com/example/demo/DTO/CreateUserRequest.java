@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CreateUserRequest {
-
     private String username;
     private String password;
 
