@@ -23,7 +23,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String registerForm(Model model) {
+    public String registerForm() {
         //Is the user logged in?
         if (isLoggedIn()) {
             return "redirect:/index";

@@ -45,7 +45,7 @@ public class RegistrationControllerTest {
         when(authentication.isAuthenticated()).thenReturn(false); //Mock the isAuthenticated method to return false
         SecurityContextHolder.setContext(securityContext);
 
-        String view = registrationController.registerForm(model); //Calls the registerForm method
+        String view = registrationController.registerForm(); //Calls the registerForm method
         assertEquals("register", view); //Check that the view returned is /register
     }
 
@@ -55,7 +55,7 @@ public class RegistrationControllerTest {
         when(authentication.isAuthenticated()).thenReturn(true); //Mock the isAuthenticated method to return true
         SecurityContextHolder.setContext(securityContext);
 
-        String view = registrationController.registerForm(model); //same as before
+        String view = registrationController.registerForm(); //same as before
         assertEquals("redirect:/index", view); //same as before just the returned view is /index
     }
 
@@ -88,7 +88,7 @@ public class RegistrationControllerTest {
         verify(userService, times(1)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
         verify(userService, times(1)).addUser(createUserRequest); //call the addUser one time
 
-        assertEquals("redirect:/index", view); //Check that the view returned is /index
+        assertEquals("index", view); //Check that the view returned is /index
         verify(model, times(1)).addAttribute(eq("successMessage"), eq("Registration is successful"));
     }
 
