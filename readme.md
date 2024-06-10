@@ -20,7 +20,10 @@
 - Sanyi
 
 **User registration:**
-- Betti
+- Accessible via /register.
+- Only accessible to non-logged-in users. Logged-in users are redirected to the main page.
+- If the username already exists, an error message is displayed.
+- Successful registration shows a confirmation message and redirects to the login page.
 
 **URL history logging:**
 - On `/history` endpoint a logged in User can access his/her previously shortened links with details (original url, shortened url, creation date).
