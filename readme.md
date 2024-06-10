@@ -7,7 +7,7 @@
 **VM arguments needed:** 
 - For DB password --> `-DMYSQL_password=password`
 - For 'testuser' creation --> `-Dspring.profiles.active=localdev`
-- For API access --> `-DVTDOC_APIKEY=c42436737546829c8cd7d37f71685d88788bade697f392d9eb13b4df4d46d7be`
+- For API access --> `-DVTDOC_APIKEY=<YOUR_API_KEY>`
 
 **User handling:**
 - If VM arguments are correctly set, a new user (with "testuser" & "password" credentials, and "ROLE_USER" role ) will be automatically created.
