@@ -23,7 +23,7 @@ public class EmailService {
     @Value("${spring.mail.password}")
     private String hostPassword;
 
-    public void sendEmail(String subject, String message) throws MessagingException {
+    public void sendEmail(String subject, String message, String emailTo) throws MessagingException {
         JavaMailSenderImpl emailSender = new JavaMailSenderImpl();
         emailSender.setHost(hostName);
         emailSender.setPort(Integer.parseInt(hostPort));
@@ -37,8 +37,8 @@ public class EmailService {
 
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setFrom("system@urlshortener.com");
-        mimeMessageHelper.setText(message, false);
-        mimeMessageHelper.setTo("admin@test.com");
+        mimeMessageHelper.setText(message, true);
+        mimeMessageHelper.setTo(emailTo);
         mimeMessageHelper.setSubject(subject);
 
         emailSender.send(mimeMessage);
