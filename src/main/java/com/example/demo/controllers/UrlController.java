@@ -68,7 +68,6 @@ public class UrlController {
             shortenedUrl.setClickCount(shortenedUrl.getClickCount() + 1);
             linkRepository.save(shortenedUrl);
             response.addHeader("location", shortenedUrl.getUrl());
-            response.sendRedirect(shortenedUrl.getUrl());
         } else {
             response.sendError(HttpStatus.NOT_FOUND.value(), "URL not found");
         }
