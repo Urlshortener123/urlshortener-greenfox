@@ -39,14 +39,15 @@ public class RegistrationController {
             model.addAttribute("errorMessage", "User already exists");
             return "register";
         }
-
         //Check if email was already used
-
-
+        if (createUserRequest.getEmail() != null && userService.emailIsVerified(createUserRequest.getEmail())) {
+            model.addAttribute("errorMessage", "E-mail was already verified by another user");
+            return "register";
+        }
         //After successful registration user should be redirected to the /login page
         userService.addUser(createUserRequest);
         model.addAttribute("successMessage", "Registration is successful");
-        return "index";
+        return "redirect:/login";
     }
 
 }
