@@ -21,9 +21,14 @@
 - Sanyi
 
 **User registration:**
-- Accessible via /register.
+- Accessible via `/register`.
 - Only accessible to non-logged-in users. Logged-in users are redirected to the main page.
+- It also requires e-mail verification, so the user must provide a name, password and e-mail.
 - If the username already exists, an error message is displayed.
+- If the given e-mail is already used by a previous user, an error message is displayed.
+- After registering credentials the app stores the user as a non-verified user, so logging in is not yet available. It also generates a hashKey(token) for each user registration.
+- Then a verification e-mail is sent to the user (using MailHog) with the given hashKey(token).
+- If the user verification is completed, the user is able to log in.
 - Successful registration shows a confirmation message and redirects to the login page.
 
 **URL history logging:**
