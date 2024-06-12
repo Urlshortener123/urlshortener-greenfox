@@ -51,4 +51,8 @@ public class UserService {
         return userRepository.findByEmail(emailAddress) != null && userRepository.findByEmail(emailAddress).getEmailVerified();
     }
 
+    public String selectVerificationToken(User user) {
+        return userVerificationTokenRepository.findByUser(user).getHash();
+    }
+
 }
