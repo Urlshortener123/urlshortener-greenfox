@@ -14,8 +14,8 @@ VM arguments needed:
 
 **CI/CD pipeline**
 - Workflow is in .github/workflows/CI.yml
-- Triggers on any commit to any branch
-- Sets up JDK 11 environment
+- Triggers on any push to any branch
+- Sets up JDK 17 environment
 - Checks gradle dependencies
 - Checks the code and runs tests
 - Branch is protected, all tests must be passed in order to merge
