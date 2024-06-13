@@ -65,7 +65,7 @@ public class RegistrationController {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-        return "redirect:/login";
+        return "index";
     }
 
     @GetMapping("/verify")

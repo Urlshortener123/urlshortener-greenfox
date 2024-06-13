@@ -39,7 +39,7 @@ class UrlShorteningTest {
 
     @BeforeEach
     void init() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl(1L, TEST_URL, UUID, null, null);
+        ShortenedUrl shortenedUrl = new ShortenedUrl(1L, TEST_URL, UUID, null, null, 0);
         linkRepository.save(shortenedUrl);
     }
 
@@ -63,6 +63,19 @@ class UrlShorteningTest {
                 .andExpect(model().attributeExists("maliciousError"))
                 .andReturn().getResponse();
         assertEquals(200, result.getStatus());
+    }
+
+    @Test
+    void urlClickCountIncrements() throws Exception {
+        ShortenedUrl shortenedUrl = linkRepository.findByUuid(UUID); //we have a shortened url
+        int initialClickCount = shortenedUrl.getClickCount();
+
+        this.mockMvc.perform(get("/r/" + UUID)); //Mocking of the opening/clicking
+
+        shortenedUrl = linkRepository.findByUuid(UUID); // Reload the entity
+        int updatedClickCount = shortenedUrl.getClickCount();
+
+        assertEquals(initialClickCount + 1, updatedClickCount);
     }
 
 }

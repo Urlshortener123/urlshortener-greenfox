@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.controllers.RegistrationController;
 import com.example.demo.models.User;
+import com.example.demo.services.EmailService;
 import com.example.demo.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ import static org.mockito.Mockito.*;
 public class RegistrationControllerTest {
     @Mock
     private UserService userService;
+    @Mock
+    private EmailService emailService;
     @Mock
     private Model model;
     @Mock
@@ -85,7 +88,7 @@ public class RegistrationControllerTest {
         when(userService.selectUser(createUserRequest.getUsername())).thenReturn(null); //Mock selectUser to return null, so in a way that the user does not exist
         String view = registrationController.registerSubmit(createUserRequest, model); //Calls the registerSubmit method
 
-        verify(userService, times(1)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
+        verify(userService, times(2)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
         verify(userService, times(1)).addUser(createUserRequest); //call the addUser one time
 
         assertEquals("index", view); //Check that the view returned is /index
