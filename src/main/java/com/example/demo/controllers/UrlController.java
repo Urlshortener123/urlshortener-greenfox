@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -69,14 +70,20 @@ public class UrlController {
     @ResponseStatus(HttpStatus.FOUND)
     @GetMapping("/r/{uuid}")
     public void redirectToUrl(@PathVariable(name = "uuid") String hash,
-                              HttpServletResponse response) {
+                              HttpServletResponse response) throws IOException {
         ShortenedUrl shortenedUrl = linkService.findByUuid(hash);
         String originalUrl = shortenedUrl.getUrl();
         // Redirection works only if http:// prefix is used, needs to be added if missing from original URL
         if(!originalUrl.startsWith(HTTP_PREFIX)) {
             originalUrl = HTTP_PREFIX + originalUrl;
         }
-        response.addHeader("location", originalUrl);
+        if (shortenedUrl != null) {
+            shortenedUrl.setClickCount(shortenedUrl.getClickCount() + 1);
+            linkService.addLink(shortenedUrl);
+            response.addHeader("location", shortenedUrl.getUrl());
+        } else {
+            response.sendError(HttpStatus.NOT_FOUND.value(), "URL not found");
+        }
     }
 
     @GetMapping("/history")
