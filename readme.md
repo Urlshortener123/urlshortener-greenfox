@@ -13,7 +13,6 @@
 - If VM arguments are correctly set, a new user (with "testuser" & "password" credentials, and "ROLE_USER" role ) will be automatically created.
 - Now you can use `'/secured'` & `'/history` endpoints, where first you are redirected automatically to `'/login'` and get authenticated with `testuser` and `password` credentials.
 
-
 ### Application functions
 
 **URL shortening:**
@@ -42,3 +41,15 @@
 - Modified the `UrlController` to increment the `clickCount` each time a link is opened.
 - Updated the `history.html` Thymeleaf template to display the `clickCount`.
 
+**CI/CD pipeline**
+- Workflow is in .github/workflows/CI.yml
+- Triggers on any push to any branch
+- Sets up JDK 17 environment
+- Checks gradle dependencies
+- Checks the code and runs tests
+- Branch is protected, all tests must be passed in order to merge
+- If you are adding new dependencies to your build.gradle file, this will handle the dependency
+
+If you want to run tests locally:
+```sh
+./gradlew test
