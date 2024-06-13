@@ -147,3 +147,9 @@ body {
 .history_table tbody td:nth-child(1) {
     text-align: left;
 }
+
+.errorMessage {
+    display: flex;
+    justify-content: center;
+    color: darkred;
+}

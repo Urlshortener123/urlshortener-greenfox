@@ -22,6 +22,7 @@
                 <td>Original Url</td>
                 <td>Shortened Url</td>
                 <td>Creation Date</td>
+                <td>Number of openings</td>
             </tr>
             </thead>
             <tbody>
@@ -29,6 +30,7 @@
                 <td th:text="*{url}"></td>
                 <td th:text="${domain} + '/r/' + *{uuid}"></td>
                 <td th:text="*{creationDate}"></td>
+                <td th:text="*{clickCount}"></td>
             </tr>
             </tbody>
         </table>

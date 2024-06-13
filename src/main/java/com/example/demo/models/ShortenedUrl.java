@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -27,7 +26,10 @@ public class ShortenedUrl {
  private LocalDate creationDate;
 
  @ManyToOne
- @JoinColumn(name= "user_id")
+ @JoinColumn(name = "user_id")
  private User user;
+
+ @Column(name = "click_count", nullable = false)
+ private Integer clickCount = 0;
 
 }
