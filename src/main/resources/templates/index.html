@@ -21,11 +21,13 @@
         <div class="input_container">
             <!-- <label for="Url">Insert URL</label> -->
             <input type="text" id="Url" name="url" placeholder="Paste your link here">
-            <input type="hidden" name="username" th:value="${session.username} != null ? ${session.username} : ''"/>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <button id="submit_btn">Short it</button>
         </div>
+
+        <p class="errorMessage" th:text="${missingUrlError} != null ? ${missingUrlError}"></p>
+        <p class="errorMessage" th:text="${maliciousError} != null ? ${maliciousError}"></p>
     </form>
 
     <div class="link_container">
