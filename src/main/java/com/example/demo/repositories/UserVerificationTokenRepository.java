@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface UserVerificationTokenRepository extends JpaRepository<UserVerificationToken, Long> {
 
     UserVerificationToken findByUser(User user);
+    UserVerificationToken findByHash(String hash);
 
 }

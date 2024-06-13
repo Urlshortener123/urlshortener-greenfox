@@ -55,4 +55,12 @@ public class UserService {
         return userVerificationTokenRepository.findByUser(user).getHash();
     }
 
+    public UserVerificationToken selectVerificationTokenByHash(String hash) {
+        return userVerificationTokenRepository.findByHash(hash);
+    }
+
+    public void deleteVerificationToken(UserVerificationToken userVerificationToken) {
+        userVerificationTokenRepository.delete(userVerificationToken);
+    }
+
 }
