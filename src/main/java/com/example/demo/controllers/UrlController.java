@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import com.example.demo.models.ShortenedUrl;
 import com.example.demo.models.User;
-import com.example.demo.repositories.LinkRepository;
 import com.example.demo.services.BlockerService;
 import com.example.demo.services.LinkService;
 import com.example.demo.services.UserService;
@@ -26,7 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UrlController {
 
-    private final LinkRepository linkRepository;
     private final LinkService linkService;
     private final UserService userService;
     private final BlockerService blockerService;
@@ -81,7 +79,7 @@ public class UrlController {
         }
         if (shortenedUrl != null) {
             shortenedUrl.setClickCount(shortenedUrl.getClickCount() + 1);
-            linkRepository.save(shortenedUrl);
+            linkService.addLink(shortenedUrl);
             response.addHeader("location", shortenedUrl.getUrl());
         } else {
             response.sendError(HttpStatus.NOT_FOUND.value(), "URL not found");
