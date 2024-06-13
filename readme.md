@@ -37,4 +37,8 @@
 - You can enter the URL in any form, so with or without`https://` or `www.` prefix, but the application handles only the `domain.com` part to communicate with the VirusTotal API.
 
 **Counting URL opening**
-- Betti
+- Added a `click_count` column to the `urls` table to store the number of times a URL is opened.
+- Updated the `ShortenedUrl` model to include the `clickCount` field.
+- Modified the `UrlController` to increment the `clickCount` each time a link is opened.
+- Updated the `history.html` Thymeleaf template to display the `clickCount`.
+
