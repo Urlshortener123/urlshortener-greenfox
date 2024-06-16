@@ -36,7 +36,7 @@ class UrlShorteningTest {
 
     @BeforeEach
     void init() {
-        ShortenedUrl shortenedUrl = new ShortenedUrl(1L, TEST_URL, UUID, null, null);
+        ShortenedUrl shortenedUrl = new ShortenedUrl(1L, TEST_URL, UUID, null, null, 0);
         linkRepository.save(shortenedUrl);
     }
 

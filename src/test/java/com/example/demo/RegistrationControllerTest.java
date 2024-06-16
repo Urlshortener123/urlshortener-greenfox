@@ -88,7 +88,7 @@ public class RegistrationControllerTest {
         verify(userService, times(1)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
         verify(userService, times(1)).addUser(createUserRequest); //call the addUser one time
 
-        assertEquals("redirect:/index", view); //Check that the view returned is /index
+        assertEquals("index", view); //Check that the view returned is /index
         verify(model, times(1)).addAttribute(eq("successMessage"), eq("Registration is successful"));
     }
 

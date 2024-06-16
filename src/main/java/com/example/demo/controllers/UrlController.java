@@ -80,7 +80,7 @@ public class UrlController {
         if (shortenedUrl != null) {
             shortenedUrl.setClickCount(shortenedUrl.getClickCount() + 1);
             linkService.addLink(shortenedUrl);
-            response.addHeader("location", shortenedUrl.getUrl());
+            response.addHeader("location", originalUrl);
         } else {
             response.sendError(HttpStatus.NOT_FOUND.value(), "URL not found");
         }
