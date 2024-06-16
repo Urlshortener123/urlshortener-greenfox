@@ -58,10 +58,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((authorize) -> authorize
+                        //.requestMatchers("/login").permitAll()
                         .requestMatchers("/secured").authenticated()
                         .requestMatchers("/history").authenticated()
                         .anyRequest().permitAll())
-                .formLogin(Customizer.withDefaults()).anonymous(AbstractHttpConfigurer::disable);
+                .formLogin(form -> form
+                        .loginPage("/login)")
+                        .permitAll()
+                )
+                .anonymous(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
     }
