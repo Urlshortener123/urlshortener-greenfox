@@ -43,6 +43,6 @@ public class RegistrationController {
 
         //user should be redirected to the /login page
         model.addAttribute("successMessage", "Registration is successful");
-        return "index";
+        return "redirect:/login";
     }
 }
