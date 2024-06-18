@@ -4,7 +4,6 @@ import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.controllers.RegistrationController;
 import com.example.demo.models.User;
 import com.example.demo.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,14 +30,9 @@ public class RegistrationControllerTest {
     private SecurityContext securityContext;
     @InjectMocks
     private RegistrationController registrationController;
-    private MockMvc mockMvc;
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
-    }
 
     @Test
-    public void testRegisterForm_UserNotLoggedIn() throws Exception {
+    public void testRegisterForm_UserNotLoggedIn() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(false); //Mock the isAuthenticated method to return false
         SecurityContextHolder.setContext(securityContext);
@@ -50,7 +42,7 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void testRegisterForm_UserLoggedIn() throws Exception {
+    public void testRegisterForm_UserLoggedIn() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(true); //Mock the isAuthenticated method to return true
         SecurityContextHolder.setContext(securityContext);
@@ -60,7 +52,7 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void testRegisterSubmit_UserAlreadyExists() throws Exception {
+    public void testRegisterSubmit_UserAlreadyExists() {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setUsername("existinguser"); //Creates a CreateUserRequest with a username
 
@@ -77,7 +69,7 @@ public class RegistrationControllerTest {
 
 
     @Test
-    public void testRegisterSubmit_SuccessfulRegistration() throws Exception {
+    public void testRegisterSubmit_SuccessfulRegistration() {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setUsername("newuser");
         createUserRequest.setPassword("password"); //Creates a CreateUserRequest with a username and a password
@@ -88,7 +80,7 @@ public class RegistrationControllerTest {
         verify(userService, times(1)).selectUser(createUserRequest.getUsername()); //call the selectUser one time
         verify(userService, times(1)).addUser(createUserRequest); //call the addUser one time
 
-        assertEquals("index", view); //Check that the view returned is /index
+        assertEquals("redirect:/login", view);
         verify(model, times(1)).addAttribute(eq("successMessage"), eq("Registration is successful"));
     }
 
