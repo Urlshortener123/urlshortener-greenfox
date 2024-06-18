@@ -6,7 +6,6 @@ import com.example.demo.models.User;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.UserService;
 import jakarta.mail.MessagingException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,17 +38,9 @@ public class RegistrationControllerTest {
     private SecurityContext securityContext;
     @InjectMocks
     private RegistrationController registrationController;
-    private MockMvc mockMvc;
-
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
-    }
-
-    private final CreateUserRequest createUserRequestTest = new CreateUserRequest();
 
     @Test
-    public void testRegisterForm_UserNotLoggedIn() throws Exception {
+    void testRegisterForm_UserNotLoggedIn() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(false); //Mock the isAuthenticated method to return false
         SecurityContextHolder.setContext(securityContext);
@@ -59,7 +50,7 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void testRegisterForm_UserLoggedIn() throws Exception {
+    void testRegisterForm_UserLoggedIn() {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(true); //Mock the isAuthenticated method to return true
         SecurityContextHolder.setContext(securityContext);
@@ -68,8 +59,8 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void testRegisterSubmit_UserAlreadyExists() throws Exception {
-        createUserRequestTest.setUsername("existinguser"); //Creates a CreateUserRequest with a username
+    void testRegisterSubmit_UserAlreadyExists() {
+        CreateUserRequest createUserRequestTest = createUserRequestForTest();
         when(userService.selectUser(createUserRequestTest.getUsername())).thenReturn(new User()); //Mock selectUser to return a User object, in a way that the user already exist
         String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
@@ -81,11 +72,9 @@ public class RegistrationControllerTest {
         verify(model, times(1)).addAttribute(eq("errorMessage"), eq("User already exists"));
     }
 
-
     @Test
-    public void testRegisterSubmit_SuccessfulRegistration() throws Exception {
-        createUserRequestTest.setUsername("newuser");
-        createUserRequestTest.setPassword("password"); //Creates a CreateUserRequest with a username and a password
+    void testRegisterSubmit_SuccessfulRegistration() {
+        CreateUserRequest createUserRequestTest = createUserRequestForTest();
         when(userService.selectUser(createUserRequestTest.getUsername())).thenReturn(null); //Mock selectUser to return null, so in a way that the user does not exist
         String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
@@ -96,8 +85,8 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void emailVerification_emailAlreadyVerified() throws MessagingException {
-        createUserRequestTest.setEmail("test@email.com");
+    void emailVerification_emailAlreadyVerified() {
+        CreateUserRequest createUserRequestTest = createUserRequestForTest();
         when(userService.emailIsVerified(createUserRequestTest.getEmail())).thenReturn(true);
         String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
@@ -107,21 +96,27 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void emailVerification_emailNotVerifiedYet() throws Exception {
-        createUserRequestTest.setUsername("testuser");
-        createUserRequestTest.setPassword("password");
+    void emailVerification_emailNotVerifiedYet() throws Exception {
+        CreateUserRequest createUserRequestTest = createUserRequestForTest();
         //Simulate a login with Spring Security default login, and expecting an error, as the user is not verified
-        mockMvc.perform(formLogin("/login").user("testuser").password("password")).andExpect(MockMvcResultMatchers.status().isNotFound());
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
+        mockMvc.perform(formLogin("/login").user(createUserRequestTest.getUsername()).password(createUserRequestTest.getPassword())).andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
-    public void emailVerification_verificationEmailIsTriggered() throws MessagingException {
-        createUserRequestTest.setUsername("testuser");
-        createUserRequestTest.setPassword("password");
-        createUserRequestTest.setEmail("test@email.com");
+    void emailVerification_verificationEmailIsTriggered() throws MessagingException {
+        CreateUserRequest createUserRequestTest = createUserRequestForTest();
         registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
         verify(emailService, times(1)).sendEmail("[URL Shortener] Please verify your registration!", createUserRequestTest.getEmail(), createUserRequestTest.getUsername(), null);
+    }
+
+    private CreateUserRequest createUserRequestForTest() {
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setUsername("testuser");
+        createUserRequest.setPassword("password");
+        createUserRequest.setEmail("test@email.com");
+        return createUserRequest;
     }
 
 }
