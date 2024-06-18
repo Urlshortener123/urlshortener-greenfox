@@ -19,6 +19,11 @@
 **URL shortening:**
 - Sanyi
 
+**Database indexing:**
+- The `urls` database is indexed on `uuid` column to make lookups  faster
+- It means when a function is reaching out to `urls` table when returning the original url (at `localhost:8080/r/uuid`) from the shortened one, the action runs faster in case of having huge no. of records in the `urls` table
+- This is managed by a one-line command (`CREATE INDEX <index_name> on table (column)`) in `V3__...` migration script.
+
 **User registration:**
 - Accessible via `/register`.
 - Only accessible to non-logged-in users. Logged-in users are redirected to the main page.

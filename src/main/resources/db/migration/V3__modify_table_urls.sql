@@ -10,6 +10,8 @@ ALTER TABLE urls
 ALTER TABLE urls
     ADD click_count INTEGER DEFAULT 0;
 
+CREATE INDEX uuid_index on urls (uuid);
+
 ALTER TABLE users
     ADD email VARCHAR(255) NOT NULL;
 
