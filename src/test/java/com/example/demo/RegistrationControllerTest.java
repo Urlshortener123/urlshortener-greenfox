@@ -2,8 +2,8 @@ package com.example.demo;
 
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.controllers.RegistrationController;
-import com.example.demo.models.User;
 import com.example.demo.services.EmailService;
+import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,8 @@ public class RegistrationControllerTest {
     private UserService userService;
     @Mock
     private EmailService emailService;
+    @Mock
+    private RegistrationService registrationService;
     @Mock
     private Model model;
     @Mock
@@ -61,13 +63,10 @@ public class RegistrationControllerTest {
     @Test
     void testRegisterSubmit_UserAlreadyExists() {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
-        when(userService.selectUser(createUserRequestTest.getUsername())).thenReturn(new User()); //Mock selectUser to return a User object, in a way that the user already exist
+        doThrow(new IllegalStateException("User already exists")).when(registrationService).registerUser(createUserRequestTest);
         String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
-        verify(userService, times(1)).selectUser(createUserRequestTest.getUsername()); //call the selectUser one time
         verify(userService, times(0)).addUser(any(CreateUserRequest.class)); //do not call the addUser!
-        //assertEquals("User already exists", model.getAttribute("errorMessage"));
-
         assertEquals("register", view); //Check that the view returned is /register
         verify(model, times(1)).addAttribute(eq("errorMessage"), eq("User already exists"));
     }
@@ -78,8 +77,8 @@ public class RegistrationControllerTest {
         when(userService.selectUser(createUserRequestTest.getUsername())).thenReturn(null); //Mock selectUser to return null, so in a way that the user does not exist
         String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
-        verify(userService, times(2)).selectUser(createUserRequestTest.getUsername()); //call the selectUser 2 times
-        verify(userService, times(1)).addUser(createUserRequestTest); //call the addUser one time
+        verify(userService, times(1)).selectUser(createUserRequestTest.getUsername()); //call the selectUser 1 time
+        verify(registrationService, times(1)).registerUser(createUserRequestTest); //call the function one time
         assertEquals("index", view); //Check that the view returned is /index
         verify(model, times(1)).addAttribute(eq("successMessage"), eq("Registration is successful"));
     }
@@ -87,10 +86,9 @@ public class RegistrationControllerTest {
     @Test
     void emailVerification_emailAlreadyVerified() {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
-        when(userService.emailIsVerified(createUserRequestTest.getEmail())).thenReturn(true);
+        doThrow(new IllegalStateException("E-mail was already verified by another user")).when(registrationService).registerUser(createUserRequestTest);
         String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
 
-        verify(userService, times(0)).addUser(any(CreateUserRequest.class)); //do not call the addUser!
         verify(model, times(1)).addAttribute(eq("errorMessage"), eq("E-mail was already verified by another user"));
         assertEquals("register", view); //Check that the view returned is /register
     }

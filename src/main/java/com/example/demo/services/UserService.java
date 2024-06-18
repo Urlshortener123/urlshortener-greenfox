@@ -59,7 +59,10 @@ public class UserService {
         return userVerificationTokenRepository.findByHash(hash);
     }
 
-    public void deleteVerificationToken(UserVerificationToken userVerificationToken) {
+    public void validateUser(UserVerificationToken userVerificationToken) {
+        User actUser = userVerificationToken.getUser();
+        actUser.setEmailVerified(true);
+        userRepository.save(actUser);
         userVerificationTokenRepository.delete(userVerificationToken);
     }
 

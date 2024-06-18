@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.models.UserVerificationToken;
 import com.example.demo.services.EmailService;
+import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class RegistrationController {
 
+    private final RegistrationService registrationService;
     private final UserService userService;
     private final EmailService emailService;
 
@@ -40,30 +42,20 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public String registerSubmit(CreateUserRequest createUserRequest, Model model) {
-        //Does the user already exist?
-        String userName = createUserRequest.getUsername();
-        if (userService.selectUser(userName) != null) {
-            model.addAttribute("errorMessage", "User already exists");
+        //User registration
+        try {
+            registrationService.registerUser(createUserRequest);
+            model.addAttribute("successMessage", "Registration is successful");
+        } catch (IllegalStateException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             return "register";
         }
-
-        //Check if email was already used
-        String userEmail = createUserRequest.getEmail();
-        if (userEmail != null && userService.emailIsVerified(userEmail)) {
-            model.addAttribute("errorMessage", "E-mail was already verified by another user");
-            return "register";
-        }
-
-        //Successful user registration
-        userService.addUser(createUserRequest);
-        model.addAttribute("successMessage", "Registration is successful");
-
         //Sending email for verification
         try {
-            String hashKey = userService.selectVerificationToken(userService.selectUser(userName));
-            emailService.sendEmail("[URL Shortener] Please verify your registration!", userEmail, userName, hashKey);
+            String hashKey = userService.selectVerificationToken(userService.selectUser(createUserRequest.getUsername()));
+            emailService.sendEmail("[URL Shortener] Please verify your registration!", createUserRequest.getEmail(), createUserRequest.getUsername(), hashKey);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            log.error("Failed to send verification e-mail...", e);
         }
         return "index";
     }
@@ -72,8 +64,7 @@ public class RegistrationController {
     public String verifyRegistration(@RequestParam("hash") String hashKey, RedirectAttributes redirectAttributes) {
         UserVerificationToken userVerificationToken = userService.selectVerificationTokenByHash(hashKey);
         if (userVerificationToken != null) {
-            userVerificationToken.getUser().setEmailVerified(true);
-            userService.deleteVerificationToken(userVerificationToken);
+            userService.validateUser(userVerificationToken);
             //Adding a message as flashAttribute for login page
             redirectAttributes.addFlashAttribute("verificationMessage", "Your registration has been verified, now you are able to log in!");
         }
