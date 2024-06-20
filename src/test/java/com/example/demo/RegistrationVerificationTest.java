@@ -76,10 +76,9 @@ public class RegistrationVerificationTest {
 
     @Test
     void email_validation_and_token_deletion_successful() {
-        UserVerificationToken userVerificationToken = userVerificationTokenRepository.findAll().getFirst();
+        UserVerificationToken userVerificationToken = userVerificationTokenRepository.findByUser(userRepository.findByUsername(USERNAME));
         userService.validateUser(userVerificationToken);
         User newUser = userVerificationToken.getUser();
-
         assertTrue(newUser.getEmailVerified());
         assertNull(userVerificationTokenRepository.findByUser(newUser));
     }
