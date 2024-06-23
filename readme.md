@@ -1,8 +1,9 @@
 ### Initial setups needed
 
 **Docker setup:** 
-- 1st start up --> `docker run -p 3307:3306 --name mysqlcontainer -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=links -d mysql`
+- 1st start up (MySQL) --> `docker run -p 3307:3306 --name mysqlcontainer -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=links -d mysql`
 - Afterwards --> `docker start mysqlcontainer`
+- MailHog (for e-mail testing) --> `docker run -d -p 1025:1025 -p 8025:8025 --name mymailhog mailhog/mailhog`
 
 **VM arguments needed:** 
 - For DB password --> `-DMYSQL_password=password`
@@ -24,9 +25,15 @@
 - This is managed by a one-line command (`CREATE INDEX <index_name> on table (column)`) in `V3__...` migration script.
 
 **User registration:**
-- Accessible via /register.
+- Accessible via `/register`.
 - Only accessible to non-logged-in users. Logged-in users are redirected to the main page.
+- It also requires e-mail verification, so the user must provide a name, password and e-mail.
 - If the username already exists, an error message is displayed.
+- If the given e-mail is already used by a previous user, an error message is displayed.
+- After registering credentials the app stores the user as a non-verified user, so logging in is not yet available. It also generates a hashKey(token) for each user registration.
+- Then a verification e-mail is sent to the user (using MailHog) with the given hashKey(token).
+- MailHog is available at `http://localhost:8025/`, where you can check the inbox for verification message. After opening the link in the e-mail, the user's verification will be completed.
+- If the user verification is completed, the user is able to log in.
 - Successful registration shows a confirmation message and redirects to the login page.
 
 **URL history logging:**

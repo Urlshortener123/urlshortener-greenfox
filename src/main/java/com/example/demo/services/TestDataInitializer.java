@@ -28,6 +28,8 @@ public class TestDataInitializer {
             test.setUsername("testuser");
             test.setPassword(passwordEncoder.encode("password"));
             test.setRoles(initializeTestRole("ROLE_USER"));
+            test.setEmail("testuser@email.com");
+            test.setEmailVerified(true);
             userRepository.save(test);
             log.info("Created testuser...");
         }
