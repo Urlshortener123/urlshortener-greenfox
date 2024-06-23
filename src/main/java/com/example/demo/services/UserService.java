@@ -21,6 +21,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserVerificationTokenRepository userVerificationTokenRepository;
+    //private final ResetPasswordRequestRepository resetPasswordRequestRepository;
+    //private final EmailService emailService;
 
     public void addUser(CreateUserRequest createUserRequest) {
         User user = new User();
@@ -65,5 +67,47 @@ public class UserService {
         userRepository.save(actUser);
         userVerificationTokenRepository.delete(userVerificationToken);
     }
+
+    /*public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public void createPasswordResetRequest(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            String hash = UUID.randomUUID().toString();
+            ResetPasswordRequest request = new ResetPasswordRequest();
+            request.setUserId(user.getId());
+            request.setHash(hash);
+            resetPasswordRequestRepository.save(request);
+
+            String resetLink = "http://localhost:8080/resetPassword?username=" + user.getUsername() + "&hash=" + hash;
+            emailService.sendEmail(user.getEmail(), "Reset Password", "Click the link to reset your password: " + resetLink);
+        }
+    }
+
+    public boolean isPasswordResetRequestValid(String username, String hash) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return false;
+        }
+        ResetPasswordRequest request = resetPasswordRequestRepository.findByUserIdAndHash(user.getId(), hash);
+        return request != null && request.getCreationDate().isAfter(LocalDateTime.now().minusDays(1));
+    }
+
+    public void updatePassword(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+        }
+    }
+
+    public void deletePasswordResetRequests(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            resetPasswordRequestRepository.deleteByUserId(user.getId());
+        }
+    }*/
 
 }
