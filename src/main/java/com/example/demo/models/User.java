@@ -22,6 +22,9 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private String email;
+    @Column(name = "email_verified")
+    private Boolean emailVerified;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
