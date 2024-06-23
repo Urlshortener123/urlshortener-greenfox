@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.DTO.CreateUserRequest;
-import com.example.demo.controllers.RegistrationController;
 import com.example.demo.models.Role;
 import com.example.demo.models.User;
 import com.example.demo.models.UserVerificationToken;
@@ -13,15 +12,12 @@ import com.example.demo.services.EmailService;
 import com.example.demo.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,10 +42,6 @@ public class RegistrationVerificationTest {
     private BlockerService blockerService;
     @Autowired
     private MockMvc mockMvc;
-    @Mock
-    private RedirectAttributes redirectAttributes;
-    @InjectMocks
-    private RegistrationController registrationController;
 
     private static final String USERNAME = "testuser";
 
