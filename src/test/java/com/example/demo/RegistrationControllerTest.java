@@ -14,10 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.ModelAndView;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,6 +38,8 @@ public class RegistrationControllerTest {
     @Mock
     private Model model;
     @Mock
+    private BindingResult bindingResult;
+    @Mock
     private Authentication authentication;
     @Mock
     private SecurityContext securityContext;
@@ -47,8 +52,8 @@ public class RegistrationControllerTest {
         when(authentication.isAuthenticated()).thenReturn(false); //Mock the isAuthenticated method to return false
         SecurityContextHolder.setContext(securityContext);
 
-        String view = registrationController.registerForm(); //Calls the registerForm method
-        assertEquals("register", view); //Check that the view returned is /register
+        ModelAndView view = (ModelAndView) registrationController.registerForm();//Calls the registerForm method
+        ModelAndViewAssert.assertViewName(view, "register"); //Check that the view returned is /register
     }
 
     @Test
@@ -56,7 +61,7 @@ public class RegistrationControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(true); //Mock the isAuthenticated method to return true
         SecurityContextHolder.setContext(securityContext);
-        String view = registrationController.registerForm(); //same as before
+        String view = (String) registrationController.registerForm(); //same as before
         assertEquals("redirect:/index", view); //same as before just the returned view is /index
     }
 
@@ -64,7 +69,7 @@ public class RegistrationControllerTest {
     void testRegisterSubmit_UserAlreadyExists() {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
         doThrow(new IllegalStateException("User already exists")).when(registrationService).registerUser(createUserRequestTest);
-        String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
+        String view = registrationController.registerSubmit(createUserRequestTest, bindingResult, model); //Calls the registerSubmit method
 
         verify(userService, times(0)).addUser(any(CreateUserRequest.class)); //do not call the addUser!
         assertEquals("register", view); //Check that the view returned is /register
@@ -75,7 +80,7 @@ public class RegistrationControllerTest {
     void testRegisterSubmit_SuccessfulRegistration() {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
         when(userService.selectUser(createUserRequestTest.getUsername())).thenReturn(null); //Mock selectUser to return null, so in a way that the user does not exist
-        String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
+        String view = registrationController.registerSubmit(createUserRequestTest, bindingResult, model); //Calls the registerSubmit method
 
         verify(userService, times(1)).selectUser(createUserRequestTest.getUsername()); //call the selectUser 1 time
         verify(registrationService, times(1)).registerUser(createUserRequestTest); //call the function one time
@@ -87,7 +92,7 @@ public class RegistrationControllerTest {
     void emailVerification_emailAlreadyVerified() {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
         doThrow(new IllegalStateException("E-mail was already verified by another user")).when(registrationService).registerUser(createUserRequestTest);
-        String view = registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
+        String view = registrationController.registerSubmit(createUserRequestTest, bindingResult, model); //Calls the registerSubmit method
 
         verify(model, times(1)).addAttribute(eq("errorMessage"), eq("E-mail was already verified by another user"));
         assertEquals("register", view); //Check that the view returned is /register
@@ -104,7 +109,7 @@ public class RegistrationControllerTest {
     @Test
     void emailVerification_verificationEmailIsTriggered() throws MessagingException {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
-        registrationController.registerSubmit(createUserRequestTest, model); //Calls the registerSubmit method
+        registrationController.registerSubmit(createUserRequestTest, bindingResult, model); //Calls the registerSubmit method
 
         verify(emailService, times(1)).sendEmail("[URL Shortener] Please verify your registration!", createUserRequestTest.getEmail(), createUserRequestTest.getUsername(), null);
     }

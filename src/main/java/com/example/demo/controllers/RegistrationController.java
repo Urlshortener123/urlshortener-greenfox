@@ -7,6 +7,7 @@ import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -74,7 +75,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/verify")
-    public String verifyRegistration(@RequestParam("hash") String hashKey, RedirectAttributes redirectAttributes) {
+    public String verifyRegistration(@RequestParam("hash") @NotEmpty (message = "Hash key is missing!") String hashKey, RedirectAttributes redirectAttributes) {
         UserVerificationToken userVerificationToken = userService.selectVerificationTokenByHash(hashKey);
         if (userVerificationToken != null) {
             userService.validateUser(userVerificationToken);
