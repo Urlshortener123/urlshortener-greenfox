@@ -14,15 +14,21 @@
         <h1>New User Registration</h1>
     </div>
 
-    <form class="register_container" th:action="@{/register}" method="post">
+    <form class="register_container" th:action="@{/register}" th:object="${createUserRequest}" method="post">
 
         <p class="message" id="errorMessage" th:text="${errorMessage}"></p>
         <p class="message" id="successMessage" th:text="${successMessage}"></p>
 
         <div class="input_container">
-            <input type="text" id="username" name="username" placeholder="Enter your username">
+            <input type="text" id="username" th:field="*{username}" name="username" placeholder="Enter your username">
+            <div class="warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+
             <input type="password" id="password" name="password" placeholder="Enter your password">
+            <div class="warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+
             <input type="email" id="email" name="email" placeholder="Enter your e-mail address">
+            <div class="warning" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
             <button id="submit_btn" type="submit">Register</button>
         </div>
     </form>

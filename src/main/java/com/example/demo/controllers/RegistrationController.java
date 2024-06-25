@@ -6,15 +6,18 @@ import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -32,16 +35,26 @@ public class RegistrationController {
     }
 
     @GetMapping("/register")
-    public String registerForm() {
+    public Object registerForm() {
         //Is the user logged in?
         if (isLoggedIn()) {
             return "redirect:/index";
         }
-        return "register";
+        ModelAndView modelAndView = new ModelAndView();
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        modelAndView.addObject("createUserRequest", createUserRequest);
+        modelAndView.setViewName("register");
+        return modelAndView;
     }
 
     @PostMapping("/register")
-    public String registerSubmit(CreateUserRequest createUserRequest, Model model) {
+    public String registerSubmit(@Valid CreateUserRequest createUserRequest,
+                                 BindingResult bindingResult,
+                                 Model model) {
+        //Data input validation - show errors if inputs are not valid
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
         //User registration
         try {
             registrationService.registerUser(createUserRequest);
