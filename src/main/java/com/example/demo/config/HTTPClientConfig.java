@@ -15,7 +15,7 @@ public class HTTPClientConfig {
     private String vtDocUrl;
 
     @Bean
-    public BlockerResponseService blockerDTOService() {
+    public BlockerResponseService blockerResponseService() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(vtDocUrl)

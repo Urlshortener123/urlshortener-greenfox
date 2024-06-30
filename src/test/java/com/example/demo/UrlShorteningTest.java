@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.models.ShortenedUrl;
 import com.example.demo.repositories.LinkRepository;
 import com.example.demo.services.BlockerService;
+import com.example.demo.services.EmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -30,6 +31,8 @@ class UrlShorteningTest {
     private MockMvc mockMvc;
     @MockBean
     private BlockerService blockerService;
+    @MockBean
+    private EmailService emailService;
 
     private static final String UUID = "testuuid";
     private static final String TEST_URL = "http://testingurl.com";
@@ -60,6 +63,19 @@ class UrlShorteningTest {
                 .andExpect(model().attributeExists("maliciousError"))
                 .andReturn().getResponse();
         assertEquals(200, result.getStatus());
+    }
+
+    @Test
+    void urlClickCountIncrements() throws Exception {
+        ShortenedUrl shortenedUrl = linkRepository.findByUuid(UUID); //we have a shortened url
+        int initialClickCount = shortenedUrl.getClickCount();
+
+        this.mockMvc.perform(get("/r/" + UUID)); //Mocking of the opening/clicking
+
+        shortenedUrl = linkRepository.findByUuid(UUID); // Reload the entity
+        int updatedClickCount = shortenedUrl.getClickCount();
+
+        assertEquals(initialClickCount + 1, updatedClickCount);
     }
 
 }
