@@ -5,8 +5,8 @@
 - Afterwards --> `docker start mysqlcontainer`
 - MailHog (for e-mail testing) --> `docker run -d -p 1025:1025 -p 8025:8025 --name mymailhog mailhog/mailhog`
 
-**VM arguments needed:** 
-- For DB password --> `-DMYSQL_password=password`
+**VM arguments needed:**
+- For DB password and API access --> `-Djasypt.encryptor.password=(insert decription key here received via discord)`
 - For 'testuser' creation --> `-Dspring.profiles.active=localdev`
 - For API access --> `-DVTDOC_APIKEY=<YOUR_API_KEY>`
 
@@ -65,3 +65,17 @@
 If you want to run tests locally:
 ```sh
 ./gradlew test
+
+**Jasypt encryption**
+- Encryption added in order to protect sensitive data
+  
+  In order to encrypt additional sensitive information in the future please do the following steps:
+- Download Jasypt from the following link : https://github.com/jasypt/jasypt?tab=readme-ov-file
+- Click on Download distributable link
+- Extrac the Jar file named jasypt-1.9.3.jar to a folder of your liking
+- Open CLI and navigate to the folder where the previous JAR file is extracted
+- Use the  followingcommend:
+    java -cp jasypt-1.9.3.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input="sensitive information" password="your encryption passowrd that you want to use" algorithm=PBEWithMD5AndDES
+- After running the command you will receive  the  encrypted data, override your variable based on the result of the previous step
+    Example int i= 25 modfiy it to int i= ENC(result from CLI command);
+- Final step is make sure that the VM argument mentioned at the beginning is containing the correct encryption password
