@@ -62,6 +62,16 @@
 - Branch is protected, all tests must be passed in order to merge
 - If you are adding new dependencies to your build.gradle file, this will handle the dependency
 
+**Forgot password functionality**
+- Accessible via the "Forgot Password" link on the login page
+- Available to both logged-in and non-logged-in users
+- Users must provide their registered email to request a password reset
+- A unique reset link is generated and emailed to the user, expiring after 24 hours
+- The email contains a secure link redirecting the user to a password reset page
+- If the link is expired or already used, it becomes invalid, and an error message is displayed
+- Upon successful password reset, the user can log in with the new password
+- Implemented a new table reset_password_request to manage password reset requests; requests are deleted after a successful password reset.
+
 If you want to run tests locally:
 ```sh
 ./gradlew test
