@@ -1,17 +1,20 @@
 package com.example.demo.controllers;
 
+import com.example.demo.DTO.UrlRequest;
 import com.example.demo.models.ShortenedUrl;
 import com.example.demo.models.User;
 import com.example.demo.services.BlockerService;
 import com.example.demo.services.LinkService;
 import com.example.demo.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,19 +38,18 @@ public class UrlController {
     private String domainName;
 
     @PostMapping("/shortUrl")
-    public String shorteningUrl(@RequestParam String url,
+    public String shorteningUrl(@Valid UrlRequest urlRequest,
                                 Principal principal,
                                 Model model,
-                                RedirectAttributes redirectAttributes) {
-        // Check if url is given as parameter
-        if (url == null || url.isEmpty()) {
-            model.addAttribute("missingUrlError", "No URL is provided!");
+                                RedirectAttributes redirectAttributes,
+                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "index";
         }
-
+        String url = urlRequest.getUrl();
         // Check whether the url is malicious
         if (blockerService.isMalicious(url)) {
-            model.addAttribute("maliciousError","The given URL is considered malicious, shortening is not possible");
+            model.addAttribute("maliciousError", "The given URL is considered malicious, shortening is not possible");
             return "index";
         }
 
@@ -74,7 +76,7 @@ public class UrlController {
         ShortenedUrl shortenedUrl = linkService.findByUuid(hash);
         String originalUrl = shortenedUrl.getUrl();
         // Redirection works only if http:// prefix is used, needs to be added if missing from original URL
-        if(!originalUrl.startsWith(HTTP_PREFIX)) {
+        if (!originalUrl.startsWith(HTTP_PREFIX)) {
             originalUrl = HTTP_PREFIX + originalUrl;
         }
         if (shortenedUrl != null) {
