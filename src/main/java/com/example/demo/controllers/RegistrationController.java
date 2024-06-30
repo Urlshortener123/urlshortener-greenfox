@@ -5,7 +5,7 @@ import com.example.demo.models.UserVerificationToken;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
-import com.example.demo.utils.UserUtilities;
+import com.example.demo.utilities.UserUtilities;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +24,12 @@ public class RegistrationController {
     private final RegistrationService registrationService;
     private final UserService userService;
     private final EmailService emailService;
+    private final UserUtilities userUtilities;
 
     @GetMapping("/register")
     public String registerForm() {
         //Is the user logged in?
-        if (UserUtilities.isLoggedIn()) {
+        if (userUtilities.isLoggedIn()) {
             return "redirect:/index";
         }
         return "register";
