@@ -47,7 +47,6 @@ public class UrlController {
                                 Model model,
                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("urlRequest", urlRequest);
             return "index";
         }
 
