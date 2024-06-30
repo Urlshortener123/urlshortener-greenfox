@@ -15,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -39,13 +42,15 @@ public class UrlController {
 
     @PostMapping("/shortUrl")
     public String shorteningUrl(@Valid UrlRequest urlRequest,
+                                BindingResult bindingResult,
                                 Principal principal,
                                 Model model,
-                                RedirectAttributes redirectAttributes,
-                                BindingResult bindingResult) {
+                                RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("urlRequest", urlRequest);
             return "index";
         }
+
         String url = urlRequest.getUrl();
         // Check whether the url is malicious
         if (blockerService.isMalicious(url)) {

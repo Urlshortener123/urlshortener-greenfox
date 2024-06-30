@@ -19,13 +19,12 @@
 
     <form class="shortener_container" action="#" th:action="@{/shortUrl}" th:object="${urlRequest}" method="post">
         <div class="input_container">
-            <input type="text" id="url" th:field="*{url}" placeholder="Paste your link here">
+            <input type="text" id="url" th:field="*{url}" placeholder="Paste your link here"/>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             <button id="submit_btn">Shorten it</button>
         </div>
         <div class="errorMessage" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
-       <!-- <p class="errorMessage" th:text="${missingUrlError} != null ? ${missingUrlError}"></p>-->
         <p class="errorMessage" th:text="${maliciousError} != null ? ${maliciousError}"></p>
     </form>
 
