@@ -8,9 +8,7 @@ import com.example.demo.models.UserVerificationToken;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.repositories.UserVerificationTokenRepository;
-import com.example.demo.services.BlockerService;
-import com.example.demo.services.EmailService;
-import com.example.demo.services.UserService;
+import com.example.demo.services.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,6 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@TestPropertySource(properties = {
+        "spring.mail.host=mock.mail.server",
+        "spring.mail.port=25",
+})
 public class RegistrationVerificationTest {
 
     @Autowired
@@ -50,6 +53,11 @@ public class RegistrationVerificationTest {
     private RedirectAttributes redirectAttributes;
     @InjectMocks
     private RegistrationController registrationController;
+    @MockBean
+    private ResetPasswordService resetPasswordService;
+
+    @MockBean
+    private ResetPasswordEmailService resetPasswordEmailService;
 
     private static final String USERNAME = "testuser";
 
