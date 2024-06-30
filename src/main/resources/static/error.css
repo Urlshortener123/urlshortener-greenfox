@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Raleway', sans-serif;
+    background-color: #daf5d8; /* Use the same background color as other pages */
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.text_container {
+    width: 50%;
+    text-align: center;
+    background-color: #f1d03b;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.text_container h1 {
+    color: #21243d;
+    margin-bottom: 20px;
+}
+
+.text_container p {
+    color: #21243d;
+    font-size: 18px;
+    line-height: 1.6;
+}
