@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="/login.css">
+</head>
+
+<body>
+<div class="container">
+
+    <div class="text_container">
+        <h1>Login</h1>
+    </div>
+
+    <form class="login_container" th:action="@{/login}" method="post">
+
+        <p class="message" id="errorMessage" th:text="${errorMessage}"></p>
+
+        <div class="input_container">
+            <input type="text" id="username" name="username" placeholder="Enter your username">
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <button id="submit_btn" type="submit">Login</button>
+            <p class="register_link">Not registered yet? <a th:href="@{/register}">Register here</a></p>
+        </div>
+    </form>
+
+</div>
+
+<script th:inline="javascript">
+
+    var errorMessageElement = document.getElementById("errorMessage");
+
+    if (errorMessageElement.textContent.trim() !== "") {
+        errorMessageElement.style.color = "#f06464";
+        setTimeout(function() {
+            errorMessageElement.style.display = "none";
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>

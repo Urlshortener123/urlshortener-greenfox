@@ -5,13 +5,12 @@ import com.example.demo.models.UserVerificationToken;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
+import com.example.demo.utilities.UserUtilities;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,16 +28,12 @@ public class RegistrationController {
     private final RegistrationService registrationService;
     private final UserService userService;
     private final EmailService emailService;
-
-    private boolean isLoggedIn() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth != null && auth.isAuthenticated();
-    }
+    private final UserUtilities userUtilities;
 
     @GetMapping("/register")
     public Object registerForm() {
         //Is the user logged in?
-        if (isLoggedIn()) {
+        if (userUtilities.isLoggedIn()) {
             return "redirect:/index";
         }
         ModelAndView modelAndView = new ModelAndView();

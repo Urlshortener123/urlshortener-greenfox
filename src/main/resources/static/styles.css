@@ -16,15 +16,18 @@ body {
     background-color: #daf5d8;
 }
 
-.login_container {
-    text-align: right;
+.header-container {
+    width: 100%;
+    background-color: #daf5d8;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .login_container button {
     height: 30px;
     width: 150px;
     margin-top: 20px;
-    margin-right: 50px;
+    margin-right: 20px;
     background-color: #7c8bff;
     color: white;
     border-radius: 5px;

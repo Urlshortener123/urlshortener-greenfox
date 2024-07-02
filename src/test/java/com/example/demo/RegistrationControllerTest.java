@@ -5,6 +5,7 @@ import com.example.demo.controllers.RegistrationController;
 import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
+import com.example.demo.utilities.UserUtilities;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,14 +44,14 @@ public class RegistrationControllerTest {
     private Authentication authentication;
     @Mock
     private SecurityContext securityContext;
+    @Mock
+    private UserUtilities userUtilities;
     @InjectMocks
     private RegistrationController registrationController;
 
     @Test
     void testRegisterForm_UserNotLoggedIn() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(false); //Mock the isAuthenticated method to return false
-        SecurityContextHolder.setContext(securityContext);
+        when(userUtilities.isLoggedIn()).thenReturn(false);
 
         ModelAndView view = (ModelAndView) registrationController.registerForm();//Calls the registerForm method
         ModelAndViewAssert.assertViewName(view, "register"); //Check that the view returned is /register
@@ -58,6 +59,7 @@ public class RegistrationControllerTest {
 
     @Test
     void testRegisterForm_UserLoggedIn() {
+        when(userUtilities.isLoggedIn()).thenReturn(true);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.isAuthenticated()).thenReturn(true); //Mock the isAuthenticated method to return true
         SecurityContextHolder.setContext(securityContext);
