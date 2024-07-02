@@ -8,7 +8,6 @@
 **VM arguments needed:**
 - For DB password and API access --> `-Djasypt.encryptor.password=(insert decription key here received via discord)`
 - For 'testuser' creation --> `-Dspring.profiles.active=localdev`
-- For API access --> `-DVTDOC_APIKEY=<YOUR_API_KEY>`
 
 **User handling:**
 - If VM arguments are correctly set, a new user (with "testuser" & "password" credentials, and "ROLE_USER" role ) will be automatically created.
