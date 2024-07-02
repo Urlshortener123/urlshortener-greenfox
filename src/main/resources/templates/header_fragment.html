@@ -1,7 +1,19 @@
+<header class="header-container">
+    <div class="login_container" th:if="${authenticated}">
+        <a th:href="@{/history}">
+            <button>History</button>
+        </a>
+    </div>
 
+    <div class="login_container" th:if="${authenticated}">
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Log out</button>
+        </form>
+    </div>
 
-<header>
-    <div class="login_container">
-        <button>Log in</button>
+    <div class="login_container" th:if="${authenticated == null or !authenticated}">
+        <a th:href="@{/login}">
+            <button>Log in</button>
+        </a>
     </div>
 </header>
