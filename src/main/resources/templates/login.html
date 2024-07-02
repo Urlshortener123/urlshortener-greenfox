@@ -17,6 +17,7 @@
     <form class="login_container" th:action="@{/login}" method="post">
 
         <p class="message" id="errorMessage" th:text="${errorMessage}"></p>
+        <p class="message" id="verificationMessage" th:text="${verificationMessage}"></p>
 
         <div class="input_container">
             <input type="text" id="username" name="username" placeholder="Enter your username">
@@ -36,7 +37,7 @@
         errorMessageElement.style.color = "#f06464";
         setTimeout(function() {
             errorMessageElement.style.display = "none";
-        }, 3000);
+        }, 5000);
     }
 </script>
 

@@ -24,7 +24,7 @@
 
             <button id="submit_btn">Shorten it</button>
         </div>
-        <div class="errorMessage" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></div>
+        <p class="errorMessage" th:if="${#fields.hasErrors('url')}" th:errors="*{url}"></p>
         <p class="errorMessage" th:text="${maliciousError} != null ? ${maliciousError}"></p>
     </form>
 

@@ -30,6 +30,7 @@ body {
     padding: 50px 10px;
     font-weight: bold;
     z-index: 1000;
+    color: darkolivegreen;
 }
 
 .input_container {

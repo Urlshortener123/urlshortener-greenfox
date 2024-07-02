@@ -46,7 +46,8 @@ public class RegistrationController {
     @PostMapping("/register")
     public String registerSubmit(@Valid CreateUserRequest createUserRequest,
                                  BindingResult bindingResult,
-                                 Model model) {
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
         //Data input validation - show errors if inputs are not valid
         if (bindingResult.hasErrors()) {
             return "register";
@@ -54,7 +55,7 @@ public class RegistrationController {
         //User registration
         try {
             registrationService.registerUser(createUserRequest);
-            model.addAttribute("successMessage", "Registration is successful");
+            redirectAttributes.addFlashAttribute("successMessage", "Please check your mailbox to verify your registration!");
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "register";
@@ -66,7 +67,7 @@ public class RegistrationController {
         } catch (MessagingException e) {
             log.error("Failed to send verification e-mail...", e);
         }
-        return "index";
+        return "redirect:/register";
     }
 
     @GetMapping("/verify")
