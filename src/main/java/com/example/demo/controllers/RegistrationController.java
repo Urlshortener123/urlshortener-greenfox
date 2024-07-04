@@ -17,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -31,16 +30,13 @@ public class RegistrationController {
     private final UserUtilities userUtilities;
 
     @GetMapping("/register")
-    public Object registerForm() {
+    public Object registerForm(Model model) {
         //Is the user logged in?
         if (userUtilities.isLoggedIn()) {
             return "redirect:/index";
         }
-        ModelAndView modelAndView = new ModelAndView();
-        CreateUserRequest createUserRequest = new CreateUserRequest();
-        modelAndView.addObject("createUserRequest", createUserRequest);
-        modelAndView.setViewName("register");
-        return modelAndView;
+        model.addAttribute("createUserRequest", new CreateUserRequest());
+        return "register";
     }
 
     @PostMapping("/register")

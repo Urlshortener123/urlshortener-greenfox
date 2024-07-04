@@ -15,13 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,15 +54,15 @@ public class RegistrationControllerTest {
     void testRegisterForm_UserNotLoggedIn() {
         when(userUtilities.isLoggedIn()).thenReturn(false);
 
-        ModelAndView view = (ModelAndView) registrationController.registerForm();//Calls the registerForm method
-        ModelAndViewAssert.assertViewName(view, "register"); //Check that the view returned is /register
+        String view = (String) registrationController.registerForm(model);//Calls the registerForm method
+        assertEquals("register", view); //Check that the view returned is /register
     }
 
     @Test
     void testRegisterForm_UserLoggedIn() {
         when(userUtilities.isLoggedIn()).thenReturn(true); //Mock the isAuthenticated method to return true
         SecurityContextHolder.setContext(securityContext);
-        String view = (String) registrationController.registerForm(); //same as before
+        String view = (String) registrationController.registerForm(model); //same as before
         assertEquals("redirect:/index", view); //same as before just the returned view is /index
     }
 
