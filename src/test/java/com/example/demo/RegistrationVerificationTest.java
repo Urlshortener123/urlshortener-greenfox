@@ -49,10 +49,6 @@ public class RegistrationVerificationTest {
     private BlockerService blockerService;
     @Autowired
     private MockMvc mockMvc;
-    @Mock
-    private RedirectAttributes redirectAttributes;
-    @InjectMocks
-    private RegistrationController registrationController;
     @MockBean
     private ResetPasswordService resetPasswordService;
 

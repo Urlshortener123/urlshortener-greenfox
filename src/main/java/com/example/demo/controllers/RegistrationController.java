@@ -2,9 +2,9 @@ package com.example.demo.controllers;
 
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.models.UserVerificationToken;
-import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
+import com.example.demo.services.VerificationEmailService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final UserService userService;
-    private final EmailService emailService;
+    private final VerificationEmailService verificationEmailService;
 
     private boolean isLoggedIn() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -50,10 +50,10 @@ public class RegistrationController {
             model.addAttribute("errorMessage", e.getMessage());
             return "register";
         }
-        //Sending email for verification
+        //Sending email for vearification
         try {
             String hashKey = userService.selectVerificationToken(userService.selectUser(createUserRequest.getUsername()));
-            emailService.sendEmail("[URL Shortener] Please verify your registration!", createUserRequest.getEmail(), createUserRequest.getUsername(), hashKey);
+            verificationEmailService.sendVerificationEmail("[URL Shortener] Please verify your registration!", createUserRequest.getEmail(), createUserRequest.getUsername(), hashKey);
         } catch (MessagingException e) {
             log.error("Failed to send verification e-mail...", e);
         }
@@ -70,5 +70,4 @@ public class RegistrationController {
         }
         return "redirect:/login";
     }
-
 }

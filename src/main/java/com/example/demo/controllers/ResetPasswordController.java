@@ -1,8 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.User;
+import com.example.demo.DTO.ResetPasswordRequestDto;
 import com.example.demo.services.ResetPasswordService;
-import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequiredArgsConstructor
 public class ResetPasswordController {
-    private final UserService userService;
     private final ResetPasswordService resetPasswordService;
 
     @GetMapping("/resetPassword")
@@ -23,44 +21,27 @@ public class ResetPasswordController {
 
     @PostMapping("/resetPassword")
     public String resetPassword(@RequestParam String email, Model model) {
-        User user = userService.findByEmail(email);
-
-        if (user == null) {
-            model.addAttribute("errorMessage", "User not found");
-            return "reset_password";
-        }
-
-        if (!user.getEmailVerified()) {
-            model.addAttribute("errorMessage", "Email is not verified");
-            return "reset_password";
-        }
-
         try {
-            resetPasswordService.createResetPasswordRequest(user);
+            resetPasswordService.createResetPasswordRequest(email);
             model.addAttribute("successMessage", "Reset password email sent successfully.");
         } catch (Exception e) {
+            log.error("Failed to send reset password request e-mail...", e);
             model.addAttribute("errorMessage", "An error occurred. Please try again.");
         }
         return "reset_password";
     }
 
     @GetMapping("/updatePassword")
-    public String verifyResetToken(@RequestParam("hash") String hash, Model model) {
-        try {
-            User user = resetPasswordService.verifyResetToken(hash);
-            model.addAttribute("username", user.getUsername());
-            model.addAttribute("hash", hash);
-            return "update_password";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "redirect:/error";
-        }
+    public String showUpdatePasswordForm(@RequestParam("username") String username, @RequestParam("hash") String hash, Model model) {
+        model.addAttribute("username", username);
+        model.addAttribute("hash", hash);
+        return "update_password";
     }
 
     @PostMapping("/updatePassword")
-    public String updatePassword(@RequestParam String username, @RequestParam String hash, @RequestParam String newPassword, Model model) {
+    public String updatePassword(@ModelAttribute ResetPasswordRequestDto resetPasswordRequestDto, Model model) {
         try {
-            resetPasswordService.updatePassword(username, hash, newPassword);
+            resetPasswordService.updatePassword(resetPasswordRequestDto.getUsername(), resetPasswordRequestDto.getHash(), resetPasswordRequestDto.getNewPassword());
             model.addAttribute("successMessage", "Password updated successfully");
             return "redirect:/login";
         } catch (IllegalArgumentException e) {

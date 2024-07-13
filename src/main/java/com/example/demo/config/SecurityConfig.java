@@ -63,9 +63,9 @@ public class SecurityConfig {
                         .requestMatchers("/secured").authenticated()
                         .requestMatchers("/history").authenticated()
                         .anyRequest().permitAll())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/resetPassword", "/updatePassword"))
-                .formLogin(Customizer.withDefaults()).anonymous(AbstractHttpConfigurer::disable);
+                .csrf(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults())
+                .anonymous(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
     }
