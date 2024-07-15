@@ -7,10 +7,13 @@ import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import com.example.demo.utilities.UserUtilities;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,20 +30,28 @@ public class RegistrationController {
     private final UserUtilities userUtilities;
 
     @GetMapping("/register")
-    public String registerForm() {
+    public Object registerForm(Model model) {
         //Is the user logged in?
         if (userUtilities.isLoggedIn()) {
             return "redirect:/index";
         }
+        model.addAttribute("createUserRequest", new CreateUserRequest());
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerSubmit(CreateUserRequest createUserRequest, Model model) {
+    public String registerSubmit(@Valid CreateUserRequest createUserRequest,
+                                 BindingResult bindingResult,
+                                 Model model,
+                                 RedirectAttributes redirectAttributes) {
+        //Data input validation - show errors if inputs are not valid
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
         //User registration
         try {
             registrationService.registerUser(createUserRequest);
-            model.addAttribute("successMessage", "Registration is successful");
+            redirectAttributes.addFlashAttribute("successMessage", "Please check your mailbox to verify your registration!");
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", e.getMessage());
             return "register";
@@ -52,11 +63,11 @@ public class RegistrationController {
         } catch (MessagingException e) {
             log.error("Failed to send verification e-mail...", e);
         }
-        return "index";
+        return "redirect:/register";
     }
 
     @GetMapping("/verify")
-    public String verifyRegistration(@RequestParam("hash") String hashKey, RedirectAttributes redirectAttributes) {
+    public String verifyRegistration(@RequestParam("hash") @NotEmpty (message = "Hash key is missing!") String hashKey, RedirectAttributes redirectAttributes) {
         UserVerificationToken userVerificationToken = userService.selectVerificationTokenByHash(hashKey);
         if (userVerificationToken != null) {
             userService.validateUser(userVerificationToken);

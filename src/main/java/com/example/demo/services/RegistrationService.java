@@ -20,7 +20,7 @@ public class RegistrationService {
         }
         //Check if email was already used
         String userEmail = createUserRequest.getEmail();
-        if (userEmail != null && userService.emailIsVerified(userEmail)) {
+        if (userService.emailIsVerified(userEmail)) {
             throw new IllegalStateException("E-mail was already verified by another user");
         }
         //Successful user registration

@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
+
     private final UserUtilities userUtilities;
+
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
@@ -19,6 +21,8 @@ public class LoginController {
         if (userUtilities.isLoggedIn()) {
             return "redirect:/index"; // Redirect to main page if already authenticated
         }
+        String verificationText = (String) model.asMap().get("verificationMessage");
+        model.addAttribute("verificationMessage", verificationText);
         return "login"; // Return login page
     }
 }
