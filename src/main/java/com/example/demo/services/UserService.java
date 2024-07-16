@@ -66,4 +66,7 @@ public class UserService {
         userVerificationTokenRepository.delete(userVerificationToken);
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

@@ -94,3 +94,17 @@ body {
     text-decoration: underline;
     color: #f06464;
 }
+
+.forgot_password_link {
+    padding-top: 20px;
+}
+
+.forgot_password_link a {
+    color: #7c8bff;
+    text-decoration: none;
+}
+
+.forgot_password_link a:hover {
+    text-decoration: underline;
+    color: #f06464;
+}

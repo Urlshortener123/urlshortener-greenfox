@@ -1,9 +1,12 @@
 package com.example.demo;
 
+import com.example.demo.controllers.ResetPasswordController;
 import com.example.demo.models.ShortenedUrl;
 import com.example.demo.repositories.LinkRepository;
 import com.example.demo.services.BlockerService;
 import com.example.demo.services.EmailService;
+import com.example.demo.services.ResetPasswordEmailService;
+import com.example.demo.services.ResetPasswordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,6 +36,12 @@ class UrlShorteningTest {
     private BlockerService blockerService;
     @MockBean
     private EmailService emailService;
+
+    @MockBean
+    private ResetPasswordController resetPasswordController;
+
+    @MockBean
+    private ResetPasswordEmailService resetPasswordEmailService;
 
     private static final String UUID = "testuuid";
     private static final String TEST_URL = "http://testingurl.com";

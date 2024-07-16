@@ -2,9 +2,9 @@ package com.example.demo;
 
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.controllers.RegistrationController;
-import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
+import com.example.demo.services.VerificationEmailService;
 import com.example.demo.utilities.UserUtilities;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class RegistrationControllerTest {
     @Mock
     private UserService userService;
     @Mock
-    private EmailService emailService;
+    private VerificationEmailService verificationEmailService;
     @Mock
     private RegistrationService registrationService;
     @Mock
@@ -112,7 +112,7 @@ public class RegistrationControllerTest {
         CreateUserRequest createUserRequestTest = createUserRequestForTest();
         registrationController.registerSubmit(createUserRequestTest, bindingResult, model, redirectAttributes); //Calls the registerSubmit method
 
-        verify(emailService, times(1)).sendEmail("[URL Shortener] Please verify your registration!", createUserRequestTest.getEmail(), createUserRequestTest.getUsername(), null);
+        verify(verificationEmailService, times(1)).sendVerificationEmail("[URL Shortener] Please verify your registration!", createUserRequestTest.getEmail(), createUserRequestTest.getUsername(), null);
     }
 
     private CreateUserRequest createUserRequestForTest() {

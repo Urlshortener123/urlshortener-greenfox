@@ -2,10 +2,10 @@ package com.example.demo.controllers;
 
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.models.UserVerificationToken;
-import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import com.example.demo.utilities.UserUtilities;
+import com.example.demo.services.VerificationEmailService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,7 +26,7 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final UserService userService;
-    private final EmailService emailService;
+    private final VerificationEmailService verificationEmailService;
     private final UserUtilities userUtilities;
 
     @GetMapping("/register")
@@ -59,7 +59,7 @@ public class RegistrationController {
         //Sending email for verification
         try {
             String hashKey = userService.selectVerificationToken(userService.selectUser(createUserRequest.getUsername()));
-            emailService.sendEmail("[URL Shortener] Please verify your registration!", createUserRequest.getEmail(), createUserRequest.getUsername(), hashKey);
+            verificationEmailService.sendVerificationEmail("[URL Shortener] Please verify your registration!", createUserRequest.getEmail(), createUserRequest.getUsername(), hashKey);
         } catch (MessagingException e) {
             log.error("Failed to send verification e-mail...", e);
         }
@@ -76,5 +76,4 @@ public class RegistrationController {
         }
         return "redirect:/login";
     }
-
 }
