@@ -15,7 +15,7 @@ public class BlockerService {
 
     private final BlockerResponseService blockerResponseService;
 
-    @Value("${VTDOC_APIKEY}")
+    @Value("${vtdoc.apikey}")
     private String apiKey;
 
     private static final Integer MALICIOUS_COUNT_THRESHOLD = 3;

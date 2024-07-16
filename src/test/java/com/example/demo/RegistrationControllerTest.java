@@ -2,19 +2,16 @@ package com.example.demo;
 
 import com.example.demo.DTO.CreateUserRequest;
 import com.example.demo.controllers.RegistrationController;
-import com.example.demo.services.EmailService;
 import com.example.demo.services.RegistrationService;
 import com.example.demo.services.UserService;
 import com.example.demo.services.VerificationEmailService;
+import com.example.demo.utilities.UserUtilities;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -30,25 +27,19 @@ public class RegistrationControllerTest {
     @Mock
     private UserService userService;
     @Mock
-    private EmailService emailService;
-    @Mock
     private VerificationEmailService verificationEmailService;
     @Mock
     private RegistrationService registrationService;
     @Mock
     private Model model;
     @Mock
-    private Authentication authentication;
-    @Mock
-    private SecurityContext securityContext;
+    private UserUtilities userUtilities;
     @InjectMocks
     private RegistrationController registrationController;
 
     @Test
     void testRegisterForm_UserNotLoggedIn() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(false); //Mock the isAuthenticated method to return false
-        SecurityContextHolder.setContext(securityContext);
+        when(userUtilities.isLoggedIn()).thenReturn(false);
 
         String view = registrationController.registerForm(); //Calls the registerForm method
         assertEquals("register", view); //Check that the view returned is /register
@@ -56,11 +47,9 @@ public class RegistrationControllerTest {
 
     @Test
     void testRegisterForm_UserLoggedIn() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.isAuthenticated()).thenReturn(true); //Mock the isAuthenticated method to return true
-        SecurityContextHolder.setContext(securityContext);
-        String view = registrationController.registerForm(); //same as before
-        assertEquals("redirect:/index", view); //same as before just the returned view is /index
+        when(userUtilities.isLoggedIn()).thenReturn(true);
+        String view = registrationController.registerForm();
+        assertEquals("redirect:/index", view);
     }
 
     @Test

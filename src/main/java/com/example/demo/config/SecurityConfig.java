@@ -60,11 +60,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/secured").authenticated()
-                        .requestMatchers("/history").authenticated()
+                        .requestMatchers("/login", "/register").permitAll()
+                        .requestMatchers("/secured", "/history").authenticated()
                         .anyRequest().permitAll())
                 .csrf(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .failureUrl("/login?error=true")
+                        .defaultSuccessUrl("/index", true)
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout") // Redirect to login page with logout parameter
+                        .invalidateHttpSession(true) // Invalidate session
+                        .deleteCookies("JSESSIONID") // Remove cookies
+                        .permitAll()
+                )
                 .anonymous(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();
